@@ -1,0 +1,54 @@
+.dialogue-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  background: rgba(20, 15, 10, 0.6);
+  backdrop-filter: blur(6px);
+  border-radius: 1.2cqi 1.2cqi 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3cqi 5cqi;
+}
+
+.dialogue-row {
+  display: flex;
+  align-items: center;
+  gap: 3cqi;
+}
+
+.speaker-name {
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.6cqi;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.dialogue-text {
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 2.1cqi;
+  color: #f5ede0;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.next-hint {
+  position: absolute;
+  right: 5cqi;
+  bottom: 2.5cqi;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.6cqi;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.next-hint:hover {
+  opacity: 0.8;
+}

@@ -1,0 +1,182 @@
+import json
+from pathlib import Path
+from typing import Dict, List
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.models import (
+    CaseSummary,
+    CaseDetail,
+    EvidenceOut,
+    LogSubmission,
+    CheckSubmission,
+    CheckResult,
+    NicknameIn,
+    UserOut,
+    ProgressOut,
+)
+from app import db
+
+app = FastAPI(title="기후 탐정: 장마 사건 파일 API")
+
+# 프론트엔드 개발 중에는 모든 origin 허용. 배포 전에는 실제 프론트 주소로 좁힐 것.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+DATA_DIR = Path(__file__).parent / "data"
+
+# 사건 데이터는 자주 안 바뀌므로 서버 시작 시 메모리에 로드해서 계속 재사용.
+_cases: Dict[str, dict] = {}
+# 로그/진행상태는 app/db.py의 SQLite로 영속 저장 (재시작해도 안 날아감).
+
+
+def _load_cases():
+    for file in DATA_DIR.glob("case_*.json"):
+        with open(file, encoding="utf-8") as f:
+            case = json.load(f)
+            _cases[case["case_id"]] = case
+
+
+@app.on_event("startup")
+def startup_event():
+    _load_cases()
+    db.init_db()
+
+
+@app.post("/users", response_model=UserOut)
+def register_nickname(payload: NicknameIn):
+    """닉네임만으로 유저 식별. 별도 비밀번호/로그인 없음 (초등 대상 MVP).
+    프론트는 여기서 받은 user_id를 로컬에 저장해두고, 이후 모든 요청에 같이 실어보내면 됨.
+    """
+    nickname = payload.nickname.strip()
+    if not nickname:
+        raise HTTPException(status_code=400, detail="닉네임을 입력해주세요")
+    user_id = db.create_or_get_user(nickname)
+    return UserOut(user_id=user_id, nickname=nickname)
+
+
+@app.get("/users/{user_id}/progress", response_model=List[ProgressOut])
+def get_user_progress(user_id: str):
+    """해당 유저가 어떤 사건을 풀었는지 전체 조회 (마이페이지/사건 목록에 표시용)"""
+    rows = db.get_progress(user_id)
+    return [
+        ProgressOut(
+            case_id=r["case_id"],
+            is_solved=bool(r["is_solved"]),
+            grade=r["grade"],
+            solved_at=r["solved_at"],
+        )
+        for r in rows
+    ]
+
+
+@app.get("/cases", response_model=List[CaseSummary])
+def list_cases():
+    """사건 목록 조회"""
+    return [
+        CaseSummary(
+            case_id=c["case_id"],
+            title=c["title"],
+            period=c["period"],
+            region=c.get("region"),
+        )
+        for c in _cases.values()
+    ]
+
+
+@app.get("/cases/{case_id}", response_model=CaseDetail)
+def get_case(case_id: str):
+    """사건 상세 + 증거 목록 조회"""
+    case = _cases.get(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    evidence = [EvidenceOut(**e) for e in case.get("evidence", [])]
+    return CaseDetail(
+        case_id=case["case_id"],
+        title=case["title"],
+        period=case["period"],
+        region=case.get("region"),
+        description=case.get("description"),
+        evidence=evidence,
+    )
+
+
+@app.post("/cases/{case_id}/logs")
+def save_logs(case_id: str, submission: LogSubmission):
+    """사용자의 클릭/연결 행동 로그 저장 (탐정 등급 리포트용 원본 데이터). SQLite에 영속 저장됨."""
+    if case_id not in _cases:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    total = db.save_logs(
+        case_id=case_id,
+        user_id=submission.user_id,
+        logs=[log.model_dump() for log in submission.logs],
+    )
+    return {"saved": True, "total_logs": total}
+
+
+@app.get("/cases/{case_id}/logs/{user_id}")
+def get_logs(case_id: str, user_id: str):
+    """저장된 로그 조회 (AI 리포트 생성 시 이 데이터를 프롬프트에 넣어 사용)"""
+    return {"logs": db.get_logs(case_id, user_id)}
+
+
+@app.post("/cases/{case_id}/check", response_model=CheckResult)
+def check_causal_chain(case_id: str, submission: CheckSubmission):
+    """
+    사용자가 연결한 인과관계 순서가 정답인지 확인.
+
+    causal_stages는 순서가 있는 단계 리스트이고, 각 단계 안의 required_evidence는
+    "이 단계에서 반드시 다 모여야 하는 증거들" (AND 조건, 단계 내 순서는 무관).
+    2022년 사건처럼 "수증기유입 + 정체전선형성"이 동시에 필요한 경우를 표현하기 위함.
+    """
+    case = _cases.get(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    stages = case.get("causal_stages", [])
+    user_order = submission.ordered_evidence_ids
+
+    idx = 0
+    for stage in stages:
+        needed = set(stage["required_evidence"])
+        collected = set()
+
+        while needed - collected:
+            if idx >= len(user_order):
+                return CheckResult(
+                    is_correct=False,
+                    failed_stage=stage["stage"],
+                    failed_stage_label=stage.get("label"),
+                    message=f"{stage.get('label', stage['stage'])} 단계에 필요한 증거가 부족합니다.",
+                )
+            picked = user_order[idx]
+            idx += 1
+            if picked not in needed:
+                # 이 단계에서 필요 없는 증거를 연결함 = 오답
+                return CheckResult(
+                    is_correct=False,
+                    failed_stage=stage["stage"],
+                    failed_stage_label=stage.get("label"),
+                    message=f"'{picked}' 증거는 이 단계와 관련이 없습니다.",
+                )
+            collected.add(picked)
+
+    # 모든 단계를 통과 = 정답. 진행 상태를 DB에 저장 (등급은 아직 없음 — AI 리포트 기능에서 채워질 값)
+    db.save_progress(case_id=case_id, user_id=submission.user_id, is_solved=True)
+
+    return CheckResult(
+        is_correct=True,
+        message="모든 인과관계를 올바르게 연결했습니다. 사건 해결!",
+    )
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "cases_loaded": len(_cases)}

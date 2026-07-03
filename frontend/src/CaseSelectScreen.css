@@ -1,0 +1,30 @@
+.case-files {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4cqi;
+  padding: 0 6cqi;
+}
+
+.case-file {
+  width: 25%;
+  max-width: 26cqi;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.case-file img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.case-file:hover {
+  transform: translateY(-0.6cqi) scale(1.03);
+  filter: brightness(1.05);
+}

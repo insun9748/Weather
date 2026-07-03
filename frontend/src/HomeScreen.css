@@ -1,0 +1,144 @@
+/* Positions below are lifted directly from the Figma spec (1920x1080 frame),
+   expressed as percentages of .stage so they scale with it. */
+
+.rule {
+  position: absolute;
+  left: 50.99%;
+  width: 29.74%;
+  border-top: 0.2083cqi solid #000000;
+}
+
+.rule-top {
+  top: 22.31%;
+}
+
+.rule-bottom {
+  top: 30.19%;
+}
+
+.rule-small {
+  left: 68.02%;
+  width: 12.34%;
+  top: 78.89%;
+}
+
+.stamp {
+  position: absolute;
+  left: 41%;
+  top: 35%;
+  width: 14.635%;
+  height: 7.685%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-12deg);
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.864cqi;
+  line-height: 1.38;
+  color: #ff3c3c;
+  border: 0.3125cqi solid #ff3c3c;
+  border-radius: 0.2cqi;
+  letter-spacing: 0.05em;
+}
+
+.mascot {
+  position: absolute;
+  left: 72.19%;
+  top: 33.61%;
+  width: 8.64%;
+  height: 17.59%;
+  object-fit: contain;
+  filter: drop-shadow(0 0.3cqi 0.4cqi rgba(0, 0, 0, 0.25));
+}
+
+.title {
+  position: absolute;
+  left: 50.83%;
+  top: 23.24%;
+  width: 29.9%;
+  height: 5.93%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.414cqi;
+  line-height: 1.38;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.nickname-label {
+  position: absolute;
+  left: 51.82%;
+  top: 46.11%;
+  width: 20.37%;
+  height: 5.09%;
+  display: flex;
+  align-items: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.083cqi;
+  color: #000000;
+}
+
+.nickname-input {
+  position: absolute;
+  left: 51.3%;
+  top: 52.13%;
+  width: 26.51%;
+  height: 7%;
+  padding: 0 1.2cqi;
+  border: 0.26cqi solid #000000;
+  border-radius: 0.677cqi;
+  background: rgba(255, 255, 255, 0.55);
+  color: #000000;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.8cqi;
+}
+
+.nickname-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.error-text {
+  position: absolute;
+  left: 51.3%;
+  top: 57.7%;
+  width: 26.51%;
+  margin: 0;
+  font-size: 1.3cqi;
+  color: #c0392b;
+}
+
+.start-button {
+  position: absolute;
+  left: 54.84%;
+  top: 68.06%;
+  width: 21.875%;
+  height: 7.22%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.083cqi;
+  color: #ffffff;
+  background: #000000;
+  border: 0.26cqi solid #000000;
+  border-radius: 0.677cqi;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.start-button:hover:not(:disabled) {
+  background: #3a2c1e;
+  transform: translateY(-0.1cqi);
+}
+
+.start-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

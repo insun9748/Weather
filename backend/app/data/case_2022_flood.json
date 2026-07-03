@@ -1,0 +1,84 @@
+{
+  "case_id": "2022_flood",
+  "title": "2022년 수도권 집중호우 사건",
+  "period": "2022-08-08 ~ 2022-08-09",
+  "region": "서울/수도권",
+  "description": "TODO: 사건 도입부 스토리텔링 문구 (예: '탐정님, 서울 시내에 기록적인 폭우가 쏟아졌습니다...')",
+
+  "evidence": [
+    {
+      "evidence_id": "E_wind",
+      "type": "풍향_풍속",
+      "location": "서울",
+      "value": "TODO",
+      "unit": "m/s, 방위",
+      "source": "TODO: 기상자료개방포털 ASOS",
+      "source_url": "TODO",
+      "note": "남서풍 여부와 풍속 확인 필요"
+    },
+    {
+      "evidence_id": "E_vapor_sat",
+      "type": "위성_수증기영상",
+      "location": "한반도 주변",
+      "value": "TODO",
+      "unit": "-",
+      "source": "TODO: 천리안 2A호 GK-2A 수증기채널",
+      "source_url": "TODO",
+      "note": "많은 수증기 유입 여부 확인"
+    },
+    {
+      "evidence_id": "E_cloud_sat",
+      "type": "위성_구름영상",
+      "location": "한반도 주변",
+      "value": "TODO",
+      "unit": "-",
+      "source": "TODO: 천리안 2A호 GK-2A 적외채널",
+      "source_url": "TODO",
+      "note": "정체전선 형성 여부 확인"
+    },
+    {
+      "evidence_id": "E_radar",
+      "type": "레이더_강수에코",
+      "location": "서울/수도권",
+      "value": "TODO",
+      "unit": "-",
+      "source": "TODO: 기상자료개방포털 레이더 강수량(HSR)",
+      "source_url": "TODO",
+      "note": "비구름 발달 확인"
+    },
+    {
+      "evidence_id": "E_rainfall",
+      "type": "강수량",
+      "location": "서울",
+      "value": "TODO",
+      "unit": "mm",
+      "source": "TODO: 기상자료개방포털 ASOS",
+      "source_url": "TODO",
+      "note": "집중호우 발생 확인 (최종 결과)"
+    }
+  ],
+
+  "_comment_causal_stages": "2022년 사건은 AND 조건 구조: 수증기유입+정체전선형성이 동시에 만족되어야 다음 단계(비구름 발달)로 진행. 사용자 클릭 순서(user_order)가 이 stage 순서/그룹 조건을 만족하는지 /check 에서 검증함.",
+  "causal_stages": [
+    {
+      "stage": 1,
+      "label": "수증기 유입 + 정체전선 형성 (동시 조건)",
+      "required_evidence": ["E_wind", "E_vapor_sat", "E_cloud_sat"]
+    },
+    {
+      "stage": 2,
+      "label": "비구름 발달",
+      "required_evidence": ["E_radar"]
+    },
+    {
+      "stage": 3,
+      "label": "기록적 집중호우",
+      "required_evidence": ["E_rainfall"]
+    }
+  ],
+
+  "wrong_connection_hints": {
+    "E_rainfall_first": "TODO: 강수량을 원인이 아니라 결과로 다뤄야 한다는 오답 해설 문구",
+    "skip_cloud": "TODO: 정체전선 형성 없이 바로 비구름으로 연결했을 때의 오답 해설 문구"
+  }
+}

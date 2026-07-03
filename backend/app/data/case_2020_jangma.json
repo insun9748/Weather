@@ -1,0 +1,77 @@
+{
+  "case_id": "2020_jangma",
+  "title": "2020년 역대 최장 장마 사건",
+  "period": "2020-06-24 ~ 2020-08-16",
+  "region": "전국 (특히 중부지방)",
+  "description": "TODO: 사건 도입부 스토리텔링 문구",
+
+  "evidence": [
+    {
+      "evidence_id": "E_sst",
+      "type": "해수면온도",
+      "location": "동중국해",
+      "value": "PENDING",
+      "unit": "°C",
+      "source": "PENDING: 주최측 문의 결과 대기 중 (해양기상부이 수온 데이터로 대체 가능성 있음)",
+      "source_url": "PENDING",
+      "note": "⚠️ 아직 자료 출처 미확정 — 답변 오면 값 채울 것"
+    },
+    {
+      "evidence_id": "E_rainfall",
+      "type": "누적강수량",
+      "location": "서울/중부",
+      "value": "TODO",
+      "unit": "mm",
+      "source": "TODO: 기상자료개방포털 ASOS",
+      "source_url": "TODO",
+      "note": "장마 기간 누적 강수량"
+    },
+    {
+      "evidence_id": "E_wind",
+      "type": "풍향_풍속",
+      "location": "중부지방",
+      "value": "TODO",
+      "unit": "m/s, 방위",
+      "source": "TODO: 기상자료개방포털 ASOS",
+      "source_url": "TODO",
+      "note": "강한 남서풍 여부 확인 (수증기 운반)"
+    },
+    {
+      "evidence_id": "E_front_sat",
+      "type": "위성영상_장마전선",
+      "location": "한반도 주변",
+      "value": "TODO",
+      "unit": "-",
+      "source": "TODO: 천리안 2A호 GK-2A",
+      "source_url": "TODO",
+      "note": "장마전선 장기 정체 여부 확인"
+    }
+  ],
+
+  "causal_stages": [
+    {
+      "stage": 1,
+      "label": "해수면온도 상승 → 수증기 공급 증가",
+      "required_evidence": ["E_sst"]
+    },
+    {
+      "stage": 2,
+      "label": "강한 남서풍 → 수증기 운반",
+      "required_evidence": ["E_wind"]
+    },
+    {
+      "stage": 3,
+      "label": "장마전선 장기 정체",
+      "required_evidence": ["E_front_sat"]
+    },
+    {
+      "stage": 4,
+      "label": "기록적 장마 (결과)",
+      "required_evidence": ["E_rainfall"]
+    }
+  ],
+
+  "wrong_connection_hints": {
+    "skip_sst": "TODO: SST 없이 바로 남서풍부터 연결했을 때의 오답 해설 문구"
+  }
+}
