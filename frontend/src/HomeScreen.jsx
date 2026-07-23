@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import doorBoard from './assets/home.png'
 import mascot from './assets/gisang_home.png'
+import stamp from './assets/support.png'
 import './Stage.css'
 import './HomeScreen.css'
 
 const API_BASE = 'http://localhost:8000'
+const MAX_LENGTH = 10
 
 function HomeScreen({ onRegistered }) {
   const [nickname, setNickname] = useState('')
@@ -43,35 +45,42 @@ function HomeScreen({ onRegistered }) {
   return (
     <main className="stage-wrap">
       <div className="stage" style={{ backgroundImage: `url(${doorBoard})` }}>
-        <div className="rule rule-top" />
-        <div className="rule rule-bottom" />
-        <div className="rule rule-small" />
-
-        <span className="stamp">조수 구함</span>
         <img className="mascot" src={mascot} alt="탐정 마스코트" />
+        <img className="stamp" src={stamp} alt="조수 구함" />
 
-        <h1 className="title">기후 탐정: 기후미제 사건 해결</h1>
+        <h1 className="title">기후 탐정</h1>
+        <p className="subtitle">★ 기후 미제 사건 해결 ★</p>
+        <div className="rule" />
+        <p className="tagline">당신만의 탐정 이름으로 사건을 해결해보세요.</p>
 
         <form onSubmit={handleSubmit}>
           <label className="nickname-label" htmlFor="nickname">
-            닉네임을 입력해 주세요
+            탐정 이름
           </label>
-          <input
-            id="nickname"
-            className="nickname-input"
-            type="text"
-            value={nickname}
-            maxLength={12}
-            onChange={(event) => setNickname(event.target.value)}
-            autoComplete="off"
-          />
+          <div className="nickname-input-wrap">
+            <input
+              id="nickname"
+              className="nickname-input"
+              type="text"
+              value={nickname}
+              maxLength={MAX_LENGTH}
+              placeholder="탐정 이름 입력"
+              onChange={(event) => setNickname(event.target.value)}
+              autoComplete="off"
+            />
+            <span className="nickname-count">
+              {nickname.length}/{MAX_LENGTH}
+            </span>
+          </div>
 
           {status === 'error' && <p className="error-text">{error}</p>}
 
           <button className="start-button" type="submit" disabled={!canSubmit}>
-            {status === 'loading' ? '문을 여는 중...' : '수사하러 가기'}
+            {status === 'loading' ? '문을 여는 중...' : '수사 시작하기'}
           </button>
         </form>
+
+        <p className="footer-tagline">☁ Climate Detective Office ☁</p>
       </div>
     </main>
   )

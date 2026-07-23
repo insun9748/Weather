@@ -3,28 +3,96 @@
   inset: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 4cqi;
-  padding: 0 6cqi;
+  justify-content: space-evenly;
+  padding: 0 5cqi 10cqi;
+}
+
+.case-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2cqi;
+}
+
+.case-card-2020,
+.case-card-2018 {
+  margin-left: 2cqi;
 }
 
 .case-file {
-  width: 25%;
-  max-width: 26cqi;
+  width: 22cqi;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transform: scale(1);
+  transition: transform 0.25s ease;
 }
 
 .case-file img {
   width: 100%;
   height: auto;
   display: block;
+  transition: filter 0.25s ease;
 }
 
-.case-file:hover {
-  transform: translateY(-0.6cqi) scale(1.03);
+.case-file:hover,
+.case-file:focus-visible {
+  transform: scale(1.2);
+  z-index: 5;
+}
+
+.case-file:hover img,
+.case-file:focus-visible img {
+  filter: drop-shadow(0 0 1.5cqi rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 4cqi rgba(255, 255, 255, 0.55));
+}
+
+.level-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5cqi;
+  transition: transform 0.25s ease;
+}
+
+.case-file:hover ~ .level-row,
+.case-file:focus-visible ~ .level-row {
+  transform: translateY(2cqi);
+}
+
+.level-label {
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.7cqi;
+  color: #ffffff;
+  margin-right: 0.3cqi;
+}
+
+.star {
+  font-size: 1.6cqi;
+  line-height: 1;
+}
+
+.case-start-button {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  min-width: 13cqi;
+  padding: 1.1cqi 2.4cqi;
+  font-family: 'Pretendard', 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.7cqi;
+  color: #ffffff;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.35cqi solid #df7f00;
+  border-radius: 1cqi;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.case-start-button:hover {
   filter: brightness(1.05);
+  transform: translateX(-50%) translateY(-0.1cqi);
 }

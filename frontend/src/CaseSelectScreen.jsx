@@ -1,9 +1,11 @@
 import file2020 from './assets/2020_file.png'
 import file2018 from './assets/2018_file.png'
 import file2022 from './assets/2022_file.png'
-import background from './assets/page3.png'
+import background from './assets/file_bg.png'
 import './Stage.css'
 import './CaseSelectScreen.css'
+
+const STAR_COLORS = ['#368F39', '#DB9D00', '#6F839F', '#368F39', '#DB9D00']
 
 const CASES = [
   { id: '2020', image: file2020, alt: '2020 역대 최장 장마 사건' },
@@ -17,16 +19,35 @@ function CaseSelectScreen({ onSelectCase }) {
       <div className="stage" style={{ backgroundImage: `url(${background})` }}>
         <div className="case-files">
           {CASES.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className="case-file"
-              onClick={() => onSelectCase(c.id)}
-            >
-              <img src={c.image} alt={c.alt} />
-            </button>
+            <div key={c.id} className={`case-card case-card-${c.id}`}>
+              <button
+                type="button"
+                className="case-file"
+                onClick={() => onSelectCase(c.id)}
+              >
+                <img src={c.image} alt={c.alt} />
+              </button>
+              <div className="level-row">
+                <span className="level-label">level</span>
+                {STAR_COLORS.map((color, i) => (
+                  <span key={i} className="star" style={{ color }}>
+                    ★
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
+
+        <button
+          type="button"
+          className="case-start-button"
+          onClick={() => {
+            // TODO: 선택한 사건 수사 화면으로 이동
+          }}
+        >
+          시작하기
+        </button>
       </div>
     </main>
   )

@@ -1,134 +1,146 @@
-/* Positions below are lifted directly from the Figma spec (1920x1080 frame),
-   expressed as percentages of .stage so they scale with it. */
+/* Card content lives inside the paper region of home.png:
+   left 50% / top 18.24% / width 31.875% / height 64.17% of the stage. */
 
-.rule {
+.mascot {
   position: absolute;
-  left: 50.99%;
-  width: 29.74%;
-  border-top: 0.2083cqi solid #000000;
-}
-
-.rule-top {
-  top: 22.31%;
-}
-
-.rule-bottom {
-  top: 30.19%;
-}
-
-.rule-small {
-  left: 68.02%;
-  width: 12.34%;
-  top: 78.89%;
+  left: 53%;
+  top: 7.5%;
+  width: 25%;
+  height: auto;
+  filter: drop-shadow(0 0.3cqi 0.4cqi rgba(0, 0, 0, 0.2));
 }
 
 .stamp {
   position: absolute;
-  left: 41%;
-  top: 35%;
-  width: 14.635%;
-  height: 7.685%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-12deg);
-  font-family: 'PyeongChang', sans-serif;
-  font-weight: 700;
-  font-size: 2.864cqi;
-  line-height: 1.38;
-  color: #ff3c3c;
-  border: 0.3125cqi solid #ff3c3c;
-  border-radius: 0.2cqi;
-  letter-spacing: 0.05em;
-}
-
-.mascot {
-  position: absolute;
-  left: 72.19%;
-  top: 33.61%;
-  width: 8.64%;
-  height: 17.59%;
-  object-fit: contain;
-  filter: drop-shadow(0 0.3cqi 0.4cqi rgba(0, 0, 0, 0.25));
+  left: 70%;
+  top: 10%;
+  width: 17%;
+  height: auto;
 }
 
 .title {
   position: absolute;
-  left: 50.83%;
-  top: 23.24%;
-  width: 29.9%;
-  height: 5.93%;
+  left: 50%;
+  top: 33%;
+  width: 31.875%;
   margin: 0;
-  display: flex;
-  align-items: center;
+  text-align: center;
   font-family: 'PyeongChang', sans-serif;
   font-weight: 700;
-  font-size: 2.414cqi;
-  line-height: 1.38;
+  font-size: 3.4cqi;
   color: #000000;
-  white-space: nowrap;
+}
+
+.subtitle {
+  position: absolute;
+  left: 50%;
+  top: 41%;
+  width: 31.875%;
+  margin: 0;
+  text-align: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.7cqi;
+  color: #3a2c1e;
+}
+
+.rule {
+  position: absolute;
+  left: 53.9%;
+  top: 45%;
+  width: 24%;
+  border-top: 0.1cqi solid #3a2c1e;
+  opacity: 0.6;
+}
+
+.tagline {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 31.875%;
+  margin: 0;
+  text-align: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.25cqi;
+  color: #5c4a35;
 }
 
 .nickname-label {
   position: absolute;
-  left: 51.82%;
-  top: 46.11%;
-  width: 20.37%;
-  height: 5.09%;
-  display: flex;
-  align-items: center;
+  left: 53%;
+  top: 52.5%;
   font-family: 'PyeongChang', sans-serif;
   font-weight: 700;
-  font-size: 2.083cqi;
+  font-size: 1.875cqi;
   color: #000000;
 }
 
-.nickname-input {
+.nickname-input-wrap {
   position: absolute;
-  left: 51.3%;
-  top: 52.13%;
-  width: 26.51%;
+  left: 52.5%;
+  top: 57.5%;
+  width: 26.9%;
   height: 7%;
-  padding: 0 1.2cqi;
-  border: 0.26cqi solid #000000;
-  border-radius: 0.677cqi;
-  background: rgba(255, 255, 255, 0.55);
+}
+
+.nickname-input {
+  width: 100%;
+  height: 100%;
+  padding: 0 3.5cqi 0 1.2cqi;
+  border: 0.11cqi solid #000000;
+  border-radius: 1cqi;
+  background: rgba(255, 255, 255, 0.35);
   color: #000000;
   font-family: 'PyeongChang', sans-serif;
-  font-size: 1.8cqi;
+  font-size: 1.3cqi;
+}
+
+.nickname-input::placeholder {
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .nickname-input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.nickname-count {
+  position: absolute;
+  right: 1.2cqi;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.25cqi;
+  color: rgba(0, 0, 0, 0.54);
+  pointer-events: none;
 }
 
 .error-text {
   position: absolute;
-  left: 51.3%;
-  top: 57.7%;
-  width: 26.51%;
+  left: 52.5%;
+  top: 65.5%;
+  width: 26.9%;
   margin: 0;
-  font-size: 1.3cqi;
+  font-size: 1.2cqi;
   color: #c0392b;
 }
 
 .start-button {
   position: absolute;
-  left: 54.84%;
-  top: 68.06%;
-  width: 21.875%;
-  height: 7.22%;
+  left: 55%;
+  top: 70.5%;
+  width: 22%;
+  height: 8.5%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'PyeongChang', sans-serif;
   font-weight: 700;
-  font-size: 2.083cqi;
-  color: #ffffff;
-  background: #000000;
-  border: 0.26cqi solid #000000;
-  border-radius: 0.677cqi;
+  font-size: 1.875cqi;
+  color: #ffd5ab;
+  background: #2b1f15;
+  border: 0.45cqi solid #6b4a32;
+  border-radius: 1.1cqi;
   cursor: pointer;
   transition: transform 0.15s ease, background 0.15s ease;
 }
@@ -141,4 +153,17 @@
 .start-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.footer-tagline {
+  position: absolute;
+  left: 50%;
+  top: 90.5%;
+  width: 31.875%;
+  margin: 0;
+  text-align: center;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.1cqi;
+  letter-spacing: 0.03em;
+  color: #5c4a35;
 }

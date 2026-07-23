@@ -3,9 +3,11 @@ import HomeScreen from './HomeScreen'
 import DialogueScreen from './DialogueScreen'
 import CaseSelectScreen from './CaseSelectScreen'
 import PhotoScreen from './PhotoScreen'
+import NotebookScreen from './NotebookScreen'
 import greetingBg from './assets/page1.png'
 import assignmentBg from './assets/page2.png'
 import caseFileBg from './assets/page4.png'
+import briefingBg from './assets/page9.png'
 
 function App() {
   const [screen, setScreen] = useState('home')
@@ -52,8 +54,23 @@ function App() {
       <PhotoScreen
         background={caseFileBg}
         buttonLabel="와! 감사합니다"
+        onButtonClick={() => setScreen('notebook')}
+        compactBox
+      />
+    )
+  }
+
+  if (screen === 'notebook') {
+    return <NotebookScreen onFinish={() => setScreen('briefing')} />
+  }
+
+  if (screen === 'briefing') {
+    return (
+      <PhotoScreen
+        background={briefingBg}
+        buttonLabel="네! 열심히 해볼게요"
         onButtonClick={() => {
-          // TODO: 실제 수사(단서 조사) 화면으로 이동
+          // TODO: 현장조사(단서 수집) 화면으로 이동
         }}
       />
     )

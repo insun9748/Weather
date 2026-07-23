@@ -1,0 +1,135 @@
+import { useState } from 'react'
+import page5 from './assets/page5.png'
+import page6 from './assets/page6.png'
+import page7 from './assets/page7.png'
+import page8 from './assets/page8.png'
+import lensIcon from './assets/readingglasses.png'
+import './Stage.css'
+import './NotebookScreen.css'
+
+const ZOOM = 2.4
+const LENS_RATIO = 0.18
+// readingglasses.png: outer rim is ~500px of the 786px-wide source,
+// centered at (250, 250) -> diameter 63.6% of width, center offset 31.8%.
+// The inner (glass) opening is a bit smaller than the rim.
+const GLASS_CIRCLE_RATIO = 0.636
+const GLASS_CENTER_RATIO = 0.318
+const GLASS_INNER_RATIO = 0.5
+
+const PAGES = [
+  { key: 'case', src: page5 },
+  { key: 'ocean', src: page6 },
+  { key: 'weather', src: page7 },
+  { key: 'satellite', src: page8 },
+]
+
+function NotebookScreen({ onFinish }) {
+  const [pageIndex, setPageIndex] = useState(0)
+  const [lens, setLens] = useState(null)
+
+  const page = PAGES[pageIndex]
+  const showMagnifier = page.key === 'case'
+
+  const goTo = (index) => {
+    if (index < 0 || index >= PAGES.length) return
+    setPageIndex(index)
+  }
+
+  const goNext = () => {
+    if (pageIndex === PAGES.length - 1) {
+      onFinish?.()
+      return
+    }
+    goTo(pageIndex + 1)
+  }
+
+  const handleMouseMove = (event) => {
+    if (!showMagnifier) return
+    if (event.target.closest('.nb-hit')) {
+      setLens(null)
+      return
+    }
+    const rect = event.currentTarget.getBoundingClientRect()
+    setLens({
+      px: event.clientX - rect.left,
+      py: event.clientY - rect.top,
+      w: rect.width,
+      h: rect.height,
+    })
+  }
+
+  let lensStyle = null
+  let glassStyle = null
+  if (showMagnifier && lens) {
+    const outerSize = lens.w * LENS_RATIO
+    const glassWidth = outerSize / GLASS_CIRCLE_RATIO
+    const innerSize = glassWidth * GLASS_INNER_RATIO
+    lensStyle = {
+      width: innerSize,
+      height: innerSize,
+      left: lens.px - innerSize / 2,
+      top: lens.py - innerSize / 2,
+      backgroundImage: `url(${page.src})`,
+      backgroundSize: `${lens.w * ZOOM}px ${lens.h * ZOOM}px`,
+      backgroundPosition: `${-(lens.px * ZOOM - innerSize / 2)}px ${-(lens.py * ZOOM - innerSize / 2)}px`,
+    }
+    glassStyle = {
+      width: glassWidth,
+      left: lens.px - glassWidth * GLASS_CENTER_RATIO,
+      top: lens.py - glassWidth * GLASS_CENTER_RATIO,
+    }
+  }
+
+  return (
+    <main className="stage-wrap">
+      <div
+        className="stage notebook-stage"
+        style={{
+          backgroundImage: `url(${page.src})`,
+          cursor: lensStyle ? 'none' : undefined,
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setLens(null)}
+      >
+        <button
+          type="button"
+          className="nb-hit nb-arrow-left"
+          aria-label="이전 페이지"
+          onClick={() => goTo(pageIndex - 1)}
+          disabled={pageIndex === 0}
+        />
+        <button
+          type="button"
+          className="nb-hit nb-arrow-right"
+          aria-label="다음 페이지"
+          onClick={goNext}
+        />
+        <button
+          type="button"
+          className="nb-hit nb-tab-ocean"
+          aria-label="해양 관측소"
+          onClick={() => goTo(1)}
+        />
+        <button
+          type="button"
+          className="nb-hit nb-tab-weather"
+          aria-label="기상 관측소"
+          onClick={() => goTo(2)}
+        />
+        <button
+          type="button"
+          className="nb-hit nb-tab-satellite"
+          aria-label="위성 센터"
+          onClick={() => goTo(3)}
+        />
+
+        {glassStyle && (
+          <img className="magnifier-glass" src={lensIcon} alt="" style={glassStyle} />
+        )}
+        {lensStyle && <div className="magnifier-lens" style={lensStyle} />}
+      </div>
+    </main>
+  )
+}
+
+export default NotebookScreen

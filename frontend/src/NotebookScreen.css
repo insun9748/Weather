@@ -1,0 +1,64 @@
+.notebook-stage {
+  position: relative;
+}
+
+.nb-hit {
+  position: absolute;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.nb-hit:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.nb-arrow-left {
+  left: 2%;
+  top: 40%;
+  width: 8%;
+  height: 15%;
+}
+
+.nb-arrow-right {
+  left: 90.5%;
+  top: 40%;
+  width: 7.5%;
+  height: 15%;
+}
+
+.nb-tab-ocean {
+  left: 12.7%;
+  top: 13.4%;
+  width: 5.6%;
+  height: 13.4%;
+}
+
+.nb-tab-weather {
+  left: 12.7%;
+  top: 27.3%;
+  width: 5.6%;
+  height: 14.4%;
+}
+
+.nb-tab-satellite {
+  left: 12.7%;
+  top: 42.1%;
+  width: 5.6%;
+  height: 13.9%;
+}
+
+.magnifier-lens {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.magnifier-glass {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 0.3cqi 0.5cqi rgba(0, 0, 0, 0.35));
+}
