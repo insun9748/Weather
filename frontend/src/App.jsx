@@ -4,6 +4,7 @@ import DialogueScreen from './DialogueScreen'
 import CaseSelectScreen from './CaseSelectScreen'
 import PhotoScreen from './PhotoScreen'
 import NotebookScreen from './NotebookScreen'
+import MapScreen from './MapScreen'
 import greetingBg from './assets/page1.png'
 import assignmentBg from './assets/page2.png'
 import caseFileBg from './assets/page4.png'
@@ -12,6 +13,7 @@ import briefingBg from './assets/page9.png'
 function App() {
   const [screen, setScreen] = useState('home')
   const [user, setUser] = useState(null)
+  const [notebookReturn, setNotebookReturn] = useState('briefing')
   const nickname = user?.nickname ?? ''
 
   if (screen === 'greeting') {
@@ -44,7 +46,10 @@ function App() {
   if (screen === 'caseSelect') {
     return (
       <CaseSelectScreen
-        onSelectCase={() => setScreen('caseFile')}
+        onSelectCase={(caseId) => {
+          if (caseId !== '2020') return // 2018, 2022 사건은 아직 준비 중
+          setScreen('caseFile')
+        }}
       />
     )
   }
@@ -54,14 +59,17 @@ function App() {
       <PhotoScreen
         background={caseFileBg}
         buttonLabel="와! 감사합니다"
-        onButtonClick={() => setScreen('notebook')}
+        onButtonClick={() => {
+          setNotebookReturn('briefing')
+          setScreen('notebook')
+        }}
         compactBox
       />
     )
   }
 
   if (screen === 'notebook') {
-    return <NotebookScreen onFinish={() => setScreen('briefing')} />
+    return <NotebookScreen onFinish={() => setScreen(notebookReturn)} />
   }
 
   if (screen === 'briefing') {
@@ -69,8 +77,20 @@ function App() {
       <PhotoScreen
         background={briefingBg}
         buttonLabel="네! 열심히 해볼게요"
-        onButtonClick={() => {
-          // TODO: 현장조사(단서 수집) 화면으로 이동
+        onButtonClick={() => setScreen('map')}
+      />
+    )
+  }
+
+  if (screen === 'map') {
+    return (
+      <MapScreen
+        onOpenNotebook={() => {
+          setNotebookReturn('map')
+          setScreen('notebook')
+        }}
+        onSelectSite={() => {
+          // TODO: 선택한 관측소 현장조사 화면으로 이동
         }}
       />
     )

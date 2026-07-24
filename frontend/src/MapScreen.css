@@ -1,0 +1,78 @@
+.map-stage {
+  position: relative;
+}
+
+.map-site {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 0.2cqi 2.5cqi rgba(255, 248, 47, 0.85));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.map-site:hover,
+.map-site:focus-visible {
+  transform: scale(1.25);
+  filter: drop-shadow(0 0.2cqi 3.2cqi rgba(255, 248, 47, 1));
+  z-index: 5;
+}
+
+.map-site-ocean {
+  left: 25.57%;
+  top: 13.94%;
+  width: 13.88%;
+  height: 28.07%;
+}
+
+.map-site-weather {
+  left: 54.69%;
+  top: 21.56%;
+  width: 15.52%;
+  height: 26.88%;
+}
+
+.map-site-satellite {
+  left: 30.52%;
+  top: 50.18%;
+  width: 17.08%;
+  height: 31.47%;
+}
+
+.map-detective {
+  position: absolute;
+  left: 59.69%;
+  top: 69.07%;
+  width: 16.2%;
+  height: 26.49%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.map-notebook-button {
+  position: absolute;
+  left: 91.41%;
+  top: 2.48%;
+  width: 7.3%;
+  height: 10.83%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 4cqi;
+  line-height: 1;
+  cursor: pointer;
+  filter: drop-shadow(0 0 1.6cqi rgba(132, 255, 132, 0.8));
+  transition: transform 0.2s ease;
+}
+
+.map-notebook-button:hover,
+.map-notebook-button:focus-visible {
+  transform: scale(1.08);
+}
