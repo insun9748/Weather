@@ -1,8 +1,9 @@
-import mapBg from './assets/map1.png'
-import oceanBuilding from './assets/building1.png'
-import satelliteBuilding from './assets/building2.png'
-import weatherBuilding from './assets/building3.png'
-import detective from './assets/map_gisang.png'
+import mapBg from './assets/2020/common/map1.png'
+import oceanBuilding from './assets/2020/common/building1.png'
+import satelliteBuilding from './assets/2020/common/building2.png'
+import weatherBuilding from './assets/2020/common/building3.png'
+import detective from './assets/2020/common/map_gisang.png'
+import buildingFinish from './assets/2020/common/building_finish.png'
 import './Stage.css'
 import './MapScreen.css'
 
@@ -12,7 +13,7 @@ const SITES = [
   { id: 'satellite', label: '위성센터', image: satelliteBuilding, className: 'map-site-satellite' },
 ]
 
-function MapScreen({ onSelectSite, onOpenNotebook }) {
+function MapScreen({ onSelectSite, onOpenNotebook, completedSites = [] }) {
   return (
     <main className="stage-wrap">
       <div className="stage map-stage" style={{ backgroundImage: `url(${mapBg})` }}>
@@ -24,6 +25,15 @@ function MapScreen({ onSelectSite, onOpenNotebook }) {
             style={{ backgroundImage: `url(${site.image})` }}
             aria-label={site.label}
             onClick={() => onSelectSite?.(site.id)}
+          />
+        ))}
+
+        {SITES.filter((site) => completedSites.includes(site.id)).map((site) => (
+          <img
+            key={`${site.id}-stamp`}
+            className={`map-site-stamp ${site.className}`}
+            src={buildingFinish}
+            alt=""
           />
         ))}
 

@@ -1,0 +1,12 @@
+.quiz-option {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 8cqi;
+  padding: 0;
+  cursor: pointer;
+}
+
+.quiz-option:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

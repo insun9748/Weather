@@ -1,0 +1,48 @@
+.hint-card-slot {
+  position: absolute;
+  left: 50%;
+  top: 7cqi;
+  width: 46cqi;
+  aspect-ratio: 1966 / 2003;
+  transform: translateX(-50%);
+  perspective: 200cqi;
+}
+
+.hint-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  cursor: pointer;
+}
+
+.hint-card--flipped {
+  transform: rotateY(180deg);
+}
+
+.hint-card-face {
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  backface-visibility: hidden;
+}
+
+.hint-card-face--back {
+  transform: rotateY(180deg);
+}
+
+.hint-card-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 4cqi;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hint-card-hotspot:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

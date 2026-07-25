@@ -1,3 +1,37 @@
 .photo-stage .next-hint {
   bottom: 7cqi;
 }
+
+.photo-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 8cqi;
+  padding: 0;
+  cursor: pointer;
+}
+
+.photo-hotspot:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.photo-button-solid {
+  position: absolute;
+  right: 6cqi;
+  bottom: 3.5cqi;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.7cqi;
+  color: #ffffff;
+  background: #2fa9e6;
+  border: none;
+  border-bottom: 0.4cqi solid #0074be;
+  border-radius: 1.2cqi;
+  padding: 1cqi 2.4cqi;
+  cursor: pointer;
+}
+
+.photo-button-solid:hover {
+  filter: brightness(1.05);
+  transform: translateY(-0.1cqi);
+}
