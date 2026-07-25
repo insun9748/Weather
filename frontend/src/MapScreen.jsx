@@ -13,7 +13,7 @@ const SITES = [
   { id: 'satellite', label: '위성센터', image: satelliteBuilding, className: 'map-site-satellite' },
 ]
 
-function MapScreen({ onSelectSite, onOpenNotebook, completedSites = [] }) {
+function MapScreen({ onSelectSite, completedSites = [] }) {
   return (
     <main className="stage-wrap">
       <div className="stage map-stage" style={{ backgroundImage: `url(${mapBg})` }}>
@@ -38,15 +38,6 @@ function MapScreen({ onSelectSite, onOpenNotebook, completedSites = [] }) {
         ))}
 
         <img className="map-detective" src={detective} alt="" />
-
-        <button
-          type="button"
-          className="map-notebook-button"
-          aria-label="수사 수첩 열기"
-          onClick={onOpenNotebook}
-        >
-          📓
-        </button>
       </div>
     </main>
   )

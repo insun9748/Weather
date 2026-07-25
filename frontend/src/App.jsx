@@ -57,7 +57,6 @@ function App() {
     () => new URLSearchParams(window.location.search).get('screen') || 'home',
   )
   const [user, setUser] = useState(null)
-  const [notebookReturn, setNotebookReturn] = useState('briefing')
   const [completedSites, setCompletedSites] = useState([])
   const nickname = user?.nickname ?? ''
 
@@ -120,17 +119,14 @@ function App() {
       <PhotoScreen
         background={caseFileBg}
         buttonLabel="와! 감사합니다"
-        onButtonClick={() => {
-          setNotebookReturn('briefing')
-          setScreen('notebook')
-        }}
+        onButtonClick={() => setScreen('notebook')}
         compactBox
       />
     )
   }
 
   if (screen === 'notebook') {
-    return <NotebookScreen onFinish={() => setScreen(notebookReturn)} />
+    return <NotebookScreen onFinish={() => setScreen('briefing')} />
   }
 
   if (screen === 'briefing') {
@@ -146,10 +142,6 @@ function App() {
   if (screen === 'map') {
     return (
       <MapScreen
-        onOpenNotebook={() => {
-          setNotebookReturn('map')
-          setScreen('notebook')
-        }}
         onSelectSite={(siteId) => {
           if (siteId === 'ocean') setScreen('oceanDialogue')
           if (siteId === 'weather') setScreen('weatherDialogue')
@@ -166,12 +158,13 @@ function App() {
         background={oceanStationBg}
         speaker="해양관측소"
         lines={[
-          `안녕하세요 ${nickname} 조수님`,
+          `안녕하세요 ${nickname} 조수님.`,
           '해양관측소는 바닷물의 흐름과 수온, 염분 등 우리바다에 대한 기초적인',
           '조사를 수행하는 곳입니다. 저희가 드리는 단서를 갖고 추리해보세요!',
         ]}
         buttonLabel="추리하러 가기"
         onButtonClick={() => setScreen('oceanQuiz')}
+        voiceName="인준"
         panel
       />
     )
@@ -183,12 +176,13 @@ function App() {
         background={weatherStationBg}
         speaker="기상관측소"
         lines={[
-          `안녕하세요 ${nickname}조수님`,
+          `안녕하세요 ${nickname}조수님.`,
           '저희 기상관측소는 지상 부근의 대기 상태를 관측하는 곳입니다',
           '저희가 드리는 단서를 갖고 추리해보세요!',
         ]}
         buttonLabel="추리하러 가기"
         onButtonClick={() => setScreen('weatherQuiz')}
+        voiceName="Hyunsu Multilingual"
         panel
       />
     )
@@ -243,7 +237,7 @@ function App() {
         background={weatherWrong1Bg}
         buttonLabel="다시 풀기"
         onButtonClick={() => setScreen('weatherQuiz')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
+        buttonStyle={{ right: '8cqi', bottom: '5cqi' }}
         solidButton
       />
     )
@@ -255,7 +249,7 @@ function App() {
         background={weatherWrong2Bg}
         buttonLabel="다시 풀기"
         onButtonClick={() => setScreen('weatherQuiz')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
+        buttonStyle={{ right: '6cqi', bottom: '5cqi' }}
         solidButton
       />
     )
@@ -284,15 +278,15 @@ function App() {
         videos={[
           {
             src: weatherVapor2020,
-            left: '7.97cqi',
-            top: '19.01cqi',
+            left: '6.7cqi',
+            top: '21cqi',
             width: '20.73cqi',
             height: '19.69cqi',
           },
           {
             src: weatherVapor2021,
-            left: '28.70cqi',
-            top: '19.01cqi',
+            left: '28cqi',
+            top: '21cqi',
             width: '20.73cqi',
             height: '19.69cqi',
           },
@@ -347,7 +341,7 @@ function App() {
         background={weatherWrong3Bg}
         buttonLabel="다시 풀기"
         onButtonClick={() => setScreen('weatherQuiz2')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
+        buttonStyle={{ right: '8cqi', bottom: '8cqi' }}
         solidButton
       />
     )
@@ -377,10 +371,10 @@ function App() {
         background={weatherNotebookBg}
         hotspot={{
           label: '지도로 돌아가기',
-          left: '89.74cqi',
-          top: '24.17cqi',
-          width: '4.74cqi',
-          height: '4.74cqi',
+          left: '83.95cqi',
+          top: '2.02cqi',
+          width: '14.71cqi',
+          height: '5.65cqi',
           onClick: () => finishSite('weather'),
         }}
       />
@@ -393,13 +387,14 @@ function App() {
         background={satelliteStationBg}
         speaker="위성센터"
         lines={[
-          `안녕하세요 ${nickname} 조수님`,
+          `안녕하세요 ${nickname} 조수님.`,
           '저희 위성센터(국가기상위성센터)는 기상위성으로 촬영한 영상을',
           '분석하여 대기 상태를 관측합니다.',
           '저희가 드리는 단서를 갖고 추리해보세요!',
         ]}
         buttonLabel="추리하러 가기"
         onButtonClick={() => setScreen('satelliteQuiz')}
+        voiceName="선히"
         panel
       />
     )
@@ -412,10 +407,10 @@ function App() {
         options={[
           {
             label: '자료 확대해서 보기',
-            left: '40.10cqi',
-            top: '43.44cqi',
-            width: '3.59cqi',
-            height: '3.59cqi',
+            left: '38.54cqi',
+            top: '41.67cqi',
+            width: '5.73cqi',
+            height: '5.73cqi',
             onClick: () => {
               logEvent('inspect_data', 'satellite_zoom')
               setScreen('satelliteZoom')
@@ -423,10 +418,10 @@ function App() {
           },
           {
             label: '장마전선이 빠르게 북상했다.',
-            left: '52.86cqi',
-            top: '21.35cqi',
-            width: '39.79cqi',
-            height: '6.30cqi',
+            left: '50.83cqi',
+            top: '21.61cqi',
+            width: '41.51cqi',
+            height: '4.79cqi',
             onClick: () => {
               logEvent('wrong_answer', 'satellite_q1_north')
               setScreen('satelliteWrong1')
@@ -434,10 +429,10 @@ function App() {
           },
           {
             label: '장마전선이 한반도 부근에 오랫동안 정체했다.',
-            left: '52.86cqi',
-            top: '28.02cqi',
-            width: '39.79cqi',
-            height: '6.30cqi',
+            left: '50.83cqi',
+            top: '28.28cqi',
+            width: '41.56cqi',
+            height: '4.74cqi',
             onClick: () => {
               logEvent('correct_answer', 'satellite_q1')
               setScreen('satelliteCorrect')
@@ -445,10 +440,10 @@ function App() {
           },
           {
             label: '장마전선이 사라졌다.',
-            left: '52.86cqi',
-            top: '34.64cqi',
-            width: '39.79cqi',
-            height: '6.30cqi',
+            left: '50.83cqi',
+            top: '35.00cqi',
+            width: '41.56cqi',
+            height: '4.69cqi',
             onClick: () => {
               logEvent('wrong_answer', 'satellite_q1_disappear')
               setScreen('satelliteWrong2')
@@ -468,7 +463,7 @@ function App() {
           left: '79.01cqi',
           top: '2.34cqi',
           width: '17.29cqi',
-          height: '4.64cqi',
+          height: '3.75cqi',
           onClick: () => setScreen('satelliteQuiz'),
         }}
       />
@@ -479,10 +474,14 @@ function App() {
     return (
       <PhotoScreen
         background={satelliteWrong1Bg}
-        buttonLabel="다시 풀기"
-        onButtonClick={() => setScreen('satelliteQuiz')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
-        solidButton
+        hotspot={{
+          label: '다시 풀기',
+          left: '78.44cqi',
+          top: '44.79cqi',
+          width: '13.70cqi',
+          height: '3.75cqi',
+          onClick: () => setScreen('satelliteQuiz'),
+        }}
       />
     )
   }
@@ -493,7 +492,7 @@ function App() {
         background={satelliteWrong2Bg}
         buttonLabel="다시 풀기"
         onButtonClick={() => setScreen('satelliteQuiz')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
+        buttonStyle={{ right: '7cqi', bottom: '7cqi' }}
         solidButton
       />
     )
@@ -506,9 +505,9 @@ function App() {
         hotspot={{
           label: '획득한 단서 보기',
           left: '41.35cqi',
-          top: '38.65cqi',
+          top: '38.49cqi',
           width: '17.29cqi',
-          height: '4.58cqi',
+          height: '3.75cqi',
           onClick: () => setScreen('satelliteHint'),
         }}
       />
@@ -523,10 +522,10 @@ function App() {
         backImage={satelliteHintBack}
         hotspot={{
           label: '탐정 수첩 채우기',
-          left: '33.47%',
-          top: '71.69%',
-          width: '33.77%',
-          height: '8.89%',
+          left: '33.16%',
+          top: '72.39%',
+          width: '33.83%',
+          height: '7.29%',
           onClick: () => setScreen('satelliteNotebook'),
         }}
       />
@@ -539,10 +538,10 @@ function App() {
         background={satelliteNotebookBg}
         hotspot={{
           label: '지도로 돌아가기',
-          left: '89.74cqi',
-          top: '24.17cqi',
-          width: '4.74cqi',
-          height: '4.74cqi',
+          left: '83.54cqi',
+          top: '2.71cqi',
+          width: '13.33cqi',
+          height: '4.58cqi',
           onClick: () => finishSite('satellite'),
         }}
       />
@@ -700,10 +699,10 @@ function App() {
         background={oceanNotebookBg}
         hotspot={{
           label: '지도로 돌아가기',
-          left: '89.74cqi',
-          top: '24.17cqi',
-          width: '4.74cqi',
-          height: '4.74cqi',
+          left: '82.33cqi',
+          top: '1.03cqi',
+          width: '14.71cqi',
+          height: '6.58cqi',
           onClick: () => finishSite('ocean'),
         }}
       />
