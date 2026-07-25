@@ -29,6 +29,8 @@ import weatherQuizBg from './assets/2020/weather/p2.png'
 import weatherWrong1Bg from './assets/2020/weather/p3.png'
 import weatherWrong2Bg from './assets/2020/weather/p4.png'
 import weatherQuiz2Bg from './assets/2020/weather/p5.png'
+import weatherVapor2020 from './assets/2020/weather/2020-07-23.webm'
+import weatherVapor2021 from './assets/2020/weather/2021-07-23.webm'
 import weatherCorrectBg from './assets/2020/weather/p8.png'
 import weatherCorrect2Bg from './assets/2020/weather/p6.png'
 import weatherWrong3Bg from './assets/2020/weather/p7.png'
@@ -279,6 +281,22 @@ function App() {
     return (
       <QuizScreen
         background={weatherQuiz2Bg}
+        videos={[
+          {
+            src: weatherVapor2020,
+            left: '7.97cqi',
+            top: '19.01cqi',
+            width: '20.73cqi',
+            height: '19.69cqi',
+          },
+          {
+            src: weatherVapor2021,
+            left: '28.70cqi',
+            top: '19.01cqi',
+            width: '20.73cqi',
+            height: '19.69cqi',
+          },
+        ]}
         options={[
           {
             label: '2020년에는 더 많은 수증기가 한반도 주변에서 관측된다.',

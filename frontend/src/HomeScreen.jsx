@@ -1,11 +1,11 @@
 import { useState } from 'react'
+import { API_BASE } from './api'
 import doorBoard from './assets/home.png'
 import mascot from './assets/gisang_home.png'
 import stamp from './assets/support.png'
 import './Stage.css'
 import './HomeScreen.css'
 
-const API_BASE = 'http://localhost:8000'
 const MAX_LENGTH = 10
 
 function HomeScreen({ onRegistered }) {

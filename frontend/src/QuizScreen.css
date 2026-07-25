@@ -10,3 +10,9 @@
 .quiz-option:hover {
   background: rgba(255, 255, 255, 0.15);
 }
+
+.quiz-video {
+  position: absolute;
+  object-fit: cover;
+  pointer-events: none;
+}

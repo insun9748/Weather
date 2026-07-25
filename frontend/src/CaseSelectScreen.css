@@ -73,6 +73,12 @@
   line-height: 1;
 }
 
+.level-stars {
+  height: 1.8cqi;
+  width: auto;
+  display: block;
+}
+
 .case-start-button {
   position: absolute;
   left: 50%;
