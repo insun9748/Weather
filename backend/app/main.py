@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,11 +16,14 @@ from app.models import (
     LogSubmission,
     CheckSubmission,
     CheckResult,
+    BoardCheckIn,
+    ClimateCompareIn,
+    ClimateCompareOut,
     NicknameIn,
     UserOut,
     ProgressOut,
 )
-from app import db
+from app import db, ai, weather
 
 app = FastAPI(title="기후 탐정: 장마 사건 파일 API")
 
@@ -150,21 +157,29 @@ def check_causal_chain(case_id: str, submission: CheckSubmission):
 
         while needed - collected:
             if idx >= len(user_order):
+                message = f"{stage.get('label', stage['stage'])} 단계에 필요한 증거가 부족합니다."
                 return CheckResult(
                     is_correct=False,
                     failed_stage=stage["stage"],
                     failed_stage_label=stage.get("label"),
-                    message=f"{stage.get('label', stage['stage'])} 단계에 필요한 증거가 부족합니다.",
+                    message=message,
+                    ai_explanation=ai.generate_wrong_answer_explanation(
+                        case, user_order, stage, message
+                    ),
                 )
             picked = user_order[idx]
             idx += 1
             if picked not in needed:
                 # 이 단계에서 필요 없는 증거를 연결함 = 오답
+                message = f"'{picked}' 증거는 이 단계와 관련이 없습니다."
                 return CheckResult(
                     is_correct=False,
                     failed_stage=stage["stage"],
                     failed_stage_label=stage.get("label"),
-                    message=f"'{picked}' 증거는 이 단계와 관련이 없습니다.",
+                    message=message,
+                    ai_explanation=ai.generate_wrong_answer_explanation(
+                        case, user_order, stage, message
+                    ),
                 )
             collected.add(picked)
 
@@ -174,6 +189,90 @@ def check_causal_chain(case_id: str, submission: CheckSubmission):
     return CheckResult(
         is_correct=True,
         message="모든 인과관계를 올바르게 연결했습니다. 사건 해결!",
+    )
+
+
+# 2020_jangma 사건의 수사보드(board1.png) 정답. 프론트는 이 매핑을 모르는 상태로 제출만 함.
+BOARD_ANSWER = {"box1": "evi2", "box2": "evi3", "box3": "evi1"}
+
+
+@app.post("/cases/{case_id}/board-check", response_model=CheckResult)
+def check_board(case_id: str, submission: BoardCheckIn):
+    """수사보드에서 학생이 각 칸(box1~3)에 어떤 증거 칩(evi1~3)을 놓았는지 확인."""
+    case = _cases.get(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    placement = {
+        "box1": submission.box1,
+        "box2": submission.box2,
+        "box3": submission.box3,
+    }
+
+    if placement == BOARD_ANSWER:
+        db.save_progress(case_id=case_id, user_id=submission.user_id, is_solved=True)
+        return CheckResult(
+            is_correct=True,
+            message="모든 인과관계를 올바르게 연결했습니다. 사건 해결!",
+        )
+
+    wrong_boxes = [
+        box_id for box_id, correct_evi in BOARD_ANSWER.items()
+        if placement.get(box_id) != correct_evi
+    ]
+
+    # 오답 시도를 전부 로그로 남겨서, 나중에 탐정 등급 리포트 만들 때 활용
+    db.save_logs(
+        case_id=case_id,
+        user_id=submission.user_id,
+        logs=[{
+            "action": "board_wrong_attempt",
+            "evidence_id": json.dumps({"placement": placement, "wrong_boxes": wrong_boxes}, ensure_ascii=False),
+            "timestamp": None,
+        }],
+    )
+
+    return CheckResult(
+        is_correct=False,
+        message="수사보드의 연결이 아직 정확하지 않습니다.",
+        ai_explanation=ai.generate_board_explanation(case, placement, BOARD_ANSWER),
+        wrong_boxes=wrong_boxes,
+    )
+
+
+@app.post("/cases/{case_id}/climate-compare", response_model=ClimateCompareOut)
+def compare_climate(case_id: str, payload: ClimateCompareIn):
+    """
+    프론트가 브라우저 위치(위경도)만 보내면, 서버가 가장 가까운 기상청 관측소를 찾아
+    '오늘' 실측 날씨를 가져오고, 사건 당시의 기후 패턴과 비교하는 설명을 AI로 생성해서 돌려준다.
+    """
+    case = _cases.get(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    station = weather.find_nearest_station(payload.latitude, payload.longitude)
+    weather_data = weather.fetch_kma_weather(station["id"])
+    if weather_data is None:
+        raise HTTPException(status_code=502, detail="오늘 날씨 정보를 가져오지 못했습니다")
+
+    comparison_text = ai.generate_climate_comparison(
+        case=case,
+        location_name=station["name"],
+        weather=weather_data,
+    )
+    similarity = weather.classify_monsoon_similarity(
+        humidity=weather_data["humidity"],
+        wind_direction=weather_data["wind_direction"],
+        wind_speed=weather_data["wind_speed"],
+    )
+    return ClimateCompareOut(
+        location_name=station["name"],
+        temperature=weather_data["temperature"],
+        humidity=weather_data["humidity"],
+        precipitation=weather_data["precipitation"],
+        wind_direction=weather_data["wind_direction"],
+        comparison_text=comparison_text,
+        **similarity,
     )
 
 

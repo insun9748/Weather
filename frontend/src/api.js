@@ -33,3 +33,39 @@ export async function fetchCompletedSites(caseId, userId) {
     return []
   }
 }
+
+export async function fetchCase(caseId) {
+  const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}`)
+  if (!res.ok) throw new Error('사건 정보를 불러오지 못했습니다')
+  return res.json()
+}
+
+export async function checkCausalChain(caseId, userId, orderedEvidenceIds) {
+  const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}/check`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, ordered_evidence_ids: orderedEvidenceIds }),
+  })
+  if (!res.ok) throw new Error('채점 요청에 실패했습니다')
+  return res.json()
+}
+
+export async function checkBoard(caseId, userId, placement) {
+  const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}/board-check`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, ...placement }),
+  })
+  if (!res.ok) throw new Error('채점 요청에 실패했습니다')
+  return res.json()
+}
+
+export async function compareClimate(caseId, payload) {
+  const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}/climate-compare`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error('기후 비교 요청에 실패했습니다')
+  return res.json()
+}

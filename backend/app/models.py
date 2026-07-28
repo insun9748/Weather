@@ -63,8 +63,38 @@ class CheckSubmission(BaseModel):
     ordered_evidence_ids: List[str]
 
 
+class BoardCheckIn(BaseModel):
+    """수사보드(board1.png)에서 학생이 각 번호 칸에 무엇을 끌어다 놓았는지.
+    빈 칸은 None."""
+    user_id: str
+    box1: Optional[str] = None
+    box2: Optional[str] = None
+    box3: Optional[str] = None
+
+
 class CheckResult(BaseModel):
     is_correct: bool
     failed_stage: Optional[int] = None
     failed_stage_label: Optional[str] = None
     message: str
+    ai_explanation: Optional[str] = None  # 오답일 때만 AI가 생성한 설명이 채워짐
+    wrong_boxes: List[str] = []  # 수사보드에서 잘못 놓인 칸 id들 (정답 자체는 알려주지 않음)
+
+
+class ClimateCompareIn(BaseModel):
+    """프론트는 브라우저 위치(navigator.geolocation)로 얻은 위경도만 보낸다.
+    관측소 찾기 + 기상청 API 호출은 서버에서 처리 (인증키를 프론트에 노출하지 않기 위함)."""
+    latitude: float
+    longitude: float
+
+
+class ClimateCompareOut(BaseModel):
+    location_name: str  # 가장 가까운 기상 관측소 이름 (예: "서울")
+    temperature: Optional[float] = None
+    humidity: Optional[float] = None
+    precipitation: Optional[float] = None
+    wind_direction: Optional[str] = None  # 예: "남서" — 몬순(남서풍) 여부 비교에 사용
+    comparison_text: str
+    humidity_label: str  # "높음" | "낮음"
+    wind_label: str  # 예: "남서풍 (강함)"
+    is_similar: bool  # 오늘이 몬순(2020년 장마) 패턴과 비슷한지

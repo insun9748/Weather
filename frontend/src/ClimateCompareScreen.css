@@ -1,0 +1,89 @@
+.climate-stage {
+  position: relative;
+}
+
+.climate-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 1cqi;
+  padding: 0;
+  cursor: pointer;
+}
+
+.climate-hotspot:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.climate-hotspot:disabled {
+  cursor: default;
+}
+
+.climate-result-area {
+  position: absolute;
+  overflow-y: auto;
+  color: #3a2a18;
+  text-align: center;
+}
+
+.climate-loading {
+  margin: 0;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.8cqi;
+}
+
+.climate-error {
+  margin: 0;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.6cqi;
+  color: #b3261e;
+}
+
+.climate-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1cqi;
+}
+
+.climate-location {
+  margin: 0;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.6cqi;
+}
+
+.climate-comparison-text {
+  margin: 0;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 1.7cqi;
+  line-height: 1.7;
+}
+
+.climate-title-img {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.climate-value-box {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 3cqi;
+  pointer-events: none;
+}
+
+.climate-ribbon-img {
+  position: absolute;
+  object-fit: contain;
+  pointer-events: none;
+}

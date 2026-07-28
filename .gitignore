@@ -12,6 +12,11 @@ __pycache__/
 .venv/
 venv/
 
+# Secrets
+.env
+*.env
+!.env.example
+
 # Runtime data
 backend/app/data/app.db
 

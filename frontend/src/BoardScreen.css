@@ -1,0 +1,154 @@
+.board-hotspot {
+  position: absolute;
+  background: transparent;
+  border: none;
+  border-radius: 1.5cqi;
+  padding: 0;
+  cursor: pointer;
+}
+
+.board-hotspot:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.board-dropzone {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-chip {
+  pointer-events: auto;
+  cursor: grab;
+  object-fit: contain;
+  filter: drop-shadow(0 0.3cqi 0.6cqi rgba(0, 0, 0, 0.35));
+}
+
+.board-tray {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqi;
+  padding: 0 2cqi;
+}
+
+.board-hintbook-button {
+  position: absolute;
+  right: 1cqi;
+  top: 1cqi;
+  width: 7cqi;
+  height: 6.3cqi;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.2s ease;
+}
+
+.board-hintbook-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1cqi rgba(140, 255, 140, 0.55));
+}
+
+.board-hintbook-button:hover,
+.board-hintbook-button:focus-visible {
+  transform: scale(1.08);
+}
+
+.board-reaction-text {
+  position: absolute;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff6e6;
+  background: rgb(53, 39, 25);
+  border-radius: 1cqi;
+  font-size: 2cqi;
+  font-weight: 700;
+  text-align: center;
+  padding: 0 2cqi;
+  box-sizing: border-box;
+}
+
+.board-wrong-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30%;
+  background: rgba(20, 15, 10, 0.85);
+  backdrop-filter: blur(6px);
+  border-radius: 1.2cqi 1.2cqi 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2cqi;
+  padding: 0 5cqi 0 2cqi;
+  z-index: 8;
+  box-sizing: border-box;
+}
+
+.board-wrong-character {
+  position: absolute;
+  left: 2cqi;
+  bottom: 16.7cqi;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.board-wrong-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2cqi;
+  margin-left: 5cqi;
+  padding-top: 1.5cqi;
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 3cqi;
+}
+
+.board-wrong-speaker {
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 2.2cqi;
+  color: #ffffff;
+  white-space: nowrap;
+  margin-left: 0.5cqi;
+}
+
+.board-wrong-text {
+  margin: 0;
+  font-family: 'PyeongChang', sans-serif;
+  font-size: 2cqi;
+  color: #f5ede0;
+  line-height: 1.5;
+}
+
+.board-wrong-retry {
+  position: absolute;
+  right: 1cqi;
+  bottom: 2cqi;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.6cqi;
+  color: #ffffff;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.35cqi solid #df7f00;
+  border-radius: 1cqi;
+  padding: 1cqi 2cqi;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.board-wrong-retry:hover {
+  filter: brightness(1.05);
+}

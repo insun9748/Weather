@@ -8,6 +8,8 @@ import NotebookScreen from './NotebookScreen'
 import MapScreen from './MapScreen'
 import QuizScreen from './QuizScreen'
 import HintCardScreen from './HintCardScreen'
+import BoardScreen from './BoardScreen'
+import ClimateCompareScreen from './ClimateCompareScreen'
 import greetingBg from './assets/page1.png'
 import assignmentBg from './assets/page2.png'
 import caseFileBg from './assets/page4.png'
@@ -148,6 +150,22 @@ function App() {
           if (siteId === 'satellite') setScreen('satelliteDialogue')
         }}
         completedSites={completedSites}
+      />
+    )
+  }
+
+  if (screen === 'climateCompare') {
+    return <ClimateCompareScreen caseId={CASE_ID} onExit={() => setScreen('caseSelect')} />
+  }
+
+  if (screen === 'board1') {
+    return (
+      <BoardScreen
+        caseId={CASE_ID}
+        userId={user?.user_id}
+        nickname={nickname}
+        onSolved={() => logEvent('case_solved', CASE_ID)}
+        onExit={() => setScreen('map')}
       />
     )
   }
@@ -559,10 +577,7 @@ function App() {
           '이제 찾은 단서를 토대로 범인을 찾아 보게나!',
         ]}
         buttonLabel="네!"
-        onButtonClick={() => {
-          // TODO: p10(2초 표시 후 자동 전환) 에셋 준비되면 다음 화면으로 연결
-          setScreen('map')
-        }}
+        onButtonClick={() => setScreen('board1')}
         panel
       />
     )
