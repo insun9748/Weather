@@ -166,6 +166,7 @@ function App() {
         nickname={nickname}
         onSolved={() => logEvent('case_solved', CASE_ID)}
         onExit={() => setScreen('map')}
+        onCompareClimate={() => setScreen('climateCompare')}
       />
     )
   }

@@ -42,6 +42,7 @@ const FINAL_CHOICE = {
   typhoon: { left: 1945, top: 790, width: 1255, height: 1190 },
 }
 const RETRY_ANSWER_BTN = { left: 1605, top: 1715, width: 620, height: 180 }
+const CLIMATE_COMPARE_BTN = { left: 2950, top: 1920, width: 705, height: 125 }
 
 const EVIDENCE = [
   { id: 'evi1', src: evi1Img, w: 533, h: 158 },
@@ -68,7 +69,7 @@ function fitSizeCqi(w, h, maxW, maxH) {
   return { width: toCqi(width), height: toCqi(height) }
 }
 
-function BoardScreen({ caseId, userId, nickname, onSolved, onExit }) {
+function BoardScreen({ caseId, userId, nickname, onSolved, onExit, onCompareClimate }) {
   const [placement, setPlacement] = useState({ box1: null, box2: null, box3: null })
   const [phase, setPhase] = useState('placing') // placing | reaction | summary | finalChoice | finalCorrect | finalWrong
   const [feedback, setFeedback] = useState('')
@@ -240,6 +241,18 @@ function BoardScreen({ caseId, userId, nickname, onSolved, onExit }) {
       <main className="stage-wrap">
         <div className="stage board-stage" style={{ backgroundImage: `url(${board5Bg})` }}>
           {hintbookButton}
+          <button
+            type="button"
+            className="board-hotspot"
+            aria-label="오늘 기후랑 대비해 보기"
+            style={{
+              left: toCqi2x(CLIMATE_COMPARE_BTN.left),
+              top: toCqi2x(CLIMATE_COMPARE_BTN.top),
+              width: toCqi2x(CLIMATE_COMPARE_BTN.width),
+              height: toCqi2x(CLIMATE_COMPARE_BTN.height),
+            }}
+            onClick={onCompareClimate}
+          />
         </div>
       </main>
     )
