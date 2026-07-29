@@ -25,6 +25,12 @@
   filter: drop-shadow(0 0.3cqi 0.6cqi rgba(0, 0, 0, 0.35));
 }
 
+/* 모바일 탭-선택 모드에서 현재 집어든 칩 표시 (PC 드래그 시엔 안 붙는 클래스라 영향 없음) */
+.board-chip--selected {
+  filter: drop-shadow(0 0.3cqi 0.6cqi rgba(0, 0, 0, 0.35)) drop-shadow(0 0 1.2cqi #ffd76a);
+  transform: scale(1.06);
+}
+
 .board-tray {
   position: absolute;
   display: flex;

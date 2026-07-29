@@ -43,19 +43,36 @@ function NotebookScreen({ onFinish }) {
     goTo(pageIndex + 1)
   }
 
+  const updateLensFromPoint = (clientX, clientY, currentTarget) => {
+    const rect = currentTarget.getBoundingClientRect()
+    setLens({
+      px: clientX - rect.left,
+      py: clientY - rect.top,
+      w: rect.width,
+      h: rect.height,
+    })
+  }
+
   const handleMouseMove = (event) => {
     if (!showMagnifier) return
     if (event.target.closest('.nb-hit')) {
       setLens(null)
       return
     }
-    const rect = event.currentTarget.getBoundingClientRect()
-    setLens({
-      px: event.clientX - rect.left,
-      py: event.clientY - rect.top,
-      w: rect.width,
-      h: rect.height,
-    })
+    updateLensFromPoint(event.clientX, event.clientY, event.currentTarget)
+  }
+
+  // 모바일(터치)에서는 mousemove가 안 일어나서 돋보기가 아예 안 켜졌음 — 터치 이벤트로도 같은 동작 지원.
+  const handleTouchMove = (event) => {
+    if (!showMagnifier) return
+    const touch = event.touches[0]
+    if (!touch) return
+    const touchedEl = document.elementFromPoint(touch.clientX, touch.clientY)
+    if (touchedEl?.closest('.nb-hit')) {
+      setLens(null)
+      return
+    }
+    updateLensFromPoint(touch.clientX, touch.clientY, event.currentTarget)
   }
 
   let lensStyle = null
@@ -90,6 +107,8 @@ function NotebookScreen({ onFinish }) {
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setLens(null)}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => setLens(null)}
       >
         <button
           type="button"

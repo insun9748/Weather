@@ -56,6 +56,12 @@ const EVIDENCE_WRONG_SRC = {
   evi3: evi3WrongImg,
 }
 
+// 터치 기기(모바일)에서는 HTML5 드래그 앤 드롭 자체가 브라우저에서 지원되지 않아서
+// 드래그가 안 먹힘 — "탭으로 선택 → 탭으로 놓기" 방식을 별도로 추가한다. PC(마우스)는
+// 이 값이 false라서 기존 드래그 동작 그대로 유지된다.
+const isTouchDevice =
+  typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
+
 // fit an image (w x h) inside a maxW x maxH box (in the 1920-wide reference
 // scale), preserving aspect ratio, and return the result as cqi style values.
 function fitSizeCqi(w, h, maxW, maxH) {
@@ -76,6 +82,7 @@ function BoardScreen({ caseId, userId, nickname, onSolved, onExit, onCompareClim
   const [wrongBoxes, setWrongBoxes] = useState([])
   const [submitting, setSubmitting] = useState(false)
   const [showHintbook, setShowHintbook] = useState(false)
+  const [selectedEvidence, setSelectedEvidence] = useState(null)
 
   const placedIds = Object.values(placement).filter(Boolean)
   const trayEvidence = EVIDENCE.filter((e) => !placedIds.includes(e.id))
@@ -106,6 +113,31 @@ function BoardScreen({ caseId, userId, nickname, onSolved, onExit, onCompareClim
     if (!evId) return
     setFeedback('')
     setPlacement((prev) => clearFromBoxes(evId, prev))
+  }
+
+  // 모바일 탭 방식: 칩을 탭해서 선택하고, 칸(또는 트레이)을 탭해서 놓는다.
+  const handleChipTap = (e, evId) => {
+    if (!isTouchDevice) return
+    e.stopPropagation()
+    setSelectedEvidence((prev) => (prev === evId ? null : evId))
+  }
+
+  const handleBoxTap = (boxId) => {
+    if (!isTouchDevice || !selectedEvidence) return
+    setFeedback('')
+    setWrongBoxes((prev) => prev.filter((id) => id !== boxId))
+    setPlacement((prev) => {
+      const cleared = clearFromBoxes(selectedEvidence, prev)
+      return { ...cleared, [boxId]: selectedEvidence }
+    })
+    setSelectedEvidence(null)
+  }
+
+  const handleTrayTap = () => {
+    if (!isTouchDevice || !selectedEvidence) return
+    setFeedback('')
+    setPlacement((prev) => clearFromBoxes(selectedEvidence, prev))
+    setSelectedEvidence(null)
   }
 
   const handleSubmit = async () => {
@@ -301,14 +333,16 @@ function BoardScreen({ caseId, userId, nickname, onSolved, onExit, onCompareClim
               }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDropOnBox(box.id)}
+              onClick={() => handleBoxTap(box.id)}
             >
               {evidence && (
                 <img
-                  className="board-chip"
+                  className={`board-chip${selectedEvidence === evidence.id ? ' board-chip--selected' : ''}`}
                   src={chipSrc}
                   alt=""
                   draggable
                   onDragStart={(e) => e.dataTransfer.setData('text/plain', evidence.id)}
+                  onClick={(e) => handleChipTap(e, evidence.id)}
                   style={fitSizeCqi(evidence.w, evidence.h, box.width * 0.82, box.height * 0.82)}
                 />
               )}
@@ -347,15 +381,17 @@ function BoardScreen({ caseId, userId, nickname, onSolved, onExit, onCompareClim
           }}
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDropOnTray}
+          onClick={handleTrayTap}
         >
           {trayEvidence.map((evidence) => (
             <img
               key={evidence.id}
-              className="board-chip board-chip-tray"
+              className={`board-chip board-chip-tray${selectedEvidence === evidence.id ? ' board-chip--selected' : ''}`}
               src={evidence.src}
               alt=""
               draggable
               onDragStart={(e) => e.dataTransfer.setData('text/plain', evidence.id)}
+              onClick={(e) => handleChipTap(e, evidence.id)}
               style={fitSizeCqi(evidence.w, evidence.h, 300, 90)}
             />
           ))}
