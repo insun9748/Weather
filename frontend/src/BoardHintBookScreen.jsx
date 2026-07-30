@@ -1,13 +1,8 @@
 import { useState } from 'react'
-import boardBook1 from './assets/2020/common/board_book1.png'
-import boardBook2 from './assets/2020/common/board_book2.png'
-import boardBook3 from './assets/2020/common/board_book3.png'
 import './Stage.css'
 import './BoardHintBookScreen.css'
 
-const PAGES = [boardBook1, boardBook2, boardBook3]
-
-function BoardHintBookScreen({ onReturn }) {
+function BoardHintBookScreen({ pages: PAGES, tabs = [], onReturn }) {
   const [pageIndex, setPageIndex] = useState(0)
 
   const goTo = (index) => {
@@ -32,24 +27,15 @@ function BoardHintBookScreen({ onReturn }) {
           onClick={() => goTo(pageIndex + 1)}
           disabled={pageIndex === PAGES.length - 1}
         />
-        <button
-          type="button"
-          className="bhb-hit bhb-tab-ocean"
-          aria-label="해양 관측소"
-          onClick={() => goTo(0)}
-        />
-        <button
-          type="button"
-          className="bhb-hit bhb-tab-weather"
-          aria-label="기상 관측소"
-          onClick={() => goTo(1)}
-        />
-        <button
-          type="button"
-          className="bhb-hit bhb-tab-satellite"
-          aria-label="위성 센터"
-          onClick={() => goTo(2)}
-        />
+        {tabs.map((tab, index) => (
+          <button
+            key={tab.label}
+            type="button"
+            className={`bhb-hit bhb-tab-${index + 1}`}
+            aria-label={tab.label}
+            onClick={() => goTo(tab.pageIndex)}
+          />
+        ))}
 
         {pageIndex === PAGES.length - 1 && (
           <button

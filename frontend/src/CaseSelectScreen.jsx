@@ -43,16 +43,6 @@ function CaseSelectScreen({ onSelectCase }) {
             </div>
           ))}
         </div>
-
-        <button
-          type="button"
-          className="case-start-button"
-          onClick={() => {
-            // TODO: 선택한 사건 수사 화면으로 이동
-          }}
-        >
-          시작하기
-        </button>
       </div>
     </main>
   )

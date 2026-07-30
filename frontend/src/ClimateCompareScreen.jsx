@@ -1,11 +1,4 @@
 import { useState } from 'react'
-import today1Bg from './assets/2020/common/today1.png'
-import today2Bg from './assets/2020/common/today2.png'
-import today3Bg from './assets/2020/common/today3.png'
-import today3Title1 from './assets/2020/common/today3_title1.png' // "다른 조건이야!" (다름)
-import today3Title2 from './assets/2020/common/today3_title2.png' // "비슷한 조건이야" (비슷함)
-import today3High from './assets/2020/common/today3_high.png'
-import today3Low from './assets/2020/common/today3_low.png'
 import { compareClimate } from './api'
 import './Stage.css'
 import './ClimateCompareScreen.css'
@@ -22,8 +15,8 @@ const RESULT_AREA = { left: 480, top: 260, width: 960, height: 560 }
 
 const TITLE_AREA = { top: 180, height: 45 }
 const RIBBON_AREA = { left: 375, top: 836, width: 1065, height: 185.41 }
-const HUMIDITY_VALUE_AREA = { left: 457, top: 545, width: 510, height: 90 }
-const WIND_VALUE_AREA = { left: 967, top: 545, width: 493, height: 90 }
+const METRIC1_VALUE_AREA = { left: 457, top: 545, width: 510, height: 90 }
+const METRIC2_VALUE_AREA = { left: 967, top: 545, width: 493, height: 90 }
 
 function getCurrentPosition() {
   return new Promise((resolve, reject) => {
@@ -38,7 +31,7 @@ function getCurrentPosition() {
   })
 }
 
-function ClimateCompareScreen({ caseId, onExit }) {
+function ClimateCompareScreen({ caseId, assets, onExit }) {
   const [status, setStatus] = useState('idle') // idle | locating | comparing | done | error
   const [result, setResult] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
@@ -65,13 +58,13 @@ function ClimateCompareScreen({ caseId, onExit }) {
     }
   }
 
-  if (showConclusion && result) {
-    const titleImg = result.is_similar ? today3Title2 : today3Title1
-    const ribbonImg = result.is_similar ? today3High : today3Low
+  if (showConclusion && result && assets.today3) {
+    const titleImg = result.is_similar ? assets.today3Title2 : assets.today3Title1
+    const ribbonImg = result.is_similar ? assets.today3High : assets.today3Low
 
     return (
       <main className="stage-wrap">
-        <div className="stage climate-stage" style={{ backgroundImage: `url(${today3Bg})` }}>
+        <div className="stage climate-stage" style={{ backgroundImage: `url(${assets.today3})` }}>
           <button
             type="button"
             className="climate-hotspot"
@@ -95,24 +88,24 @@ function ClimateCompareScreen({ caseId, onExit }) {
           <div
             className="climate-value-box"
             style={{
-              left: toCqi(HUMIDITY_VALUE_AREA.left),
-              top: toCqi(HUMIDITY_VALUE_AREA.top),
-              width: toCqi(HUMIDITY_VALUE_AREA.width),
-              height: toCqi(HUMIDITY_VALUE_AREA.height),
+              left: toCqi(METRIC1_VALUE_AREA.left),
+              top: toCqi(METRIC1_VALUE_AREA.top),
+              width: toCqi(METRIC1_VALUE_AREA.width),
+              height: toCqi(METRIC1_VALUE_AREA.height),
             }}
           >
-            {result.humidity_label}
+            {result.metric1_label}
           </div>
           <div
             className="climate-value-box"
             style={{
-              left: toCqi(WIND_VALUE_AREA.left),
-              top: toCqi(WIND_VALUE_AREA.top),
-              width: toCqi(WIND_VALUE_AREA.width),
-              height: toCqi(WIND_VALUE_AREA.height),
+              left: toCqi(METRIC2_VALUE_AREA.left),
+              top: toCqi(METRIC2_VALUE_AREA.top),
+              width: toCqi(METRIC2_VALUE_AREA.width),
+              height: toCqi(METRIC2_VALUE_AREA.height),
             }}
           >
-            {result.wind_label}
+            {result.metric2_label}
           </div>
 
           <img
@@ -134,7 +127,7 @@ function ClimateCompareScreen({ caseId, onExit }) {
   if (status === 'done' && result) {
     return (
       <main className="stage-wrap">
-        <div className="stage climate-stage" style={{ backgroundImage: `url(${today2Bg})` }}>
+        <div className="stage climate-stage" style={{ backgroundImage: `url(${assets.today2})` }}>
           <div
             className="climate-result-area"
             style={{
@@ -154,18 +147,20 @@ function ClimateCompareScreen({ caseId, onExit }) {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="climate-hotspot"
-            aria-label="결론 보러가기"
-            style={{
-              left: toCqi(CONCLUSION_BTN.left),
-              top: toCqi(CONCLUSION_BTN.top),
-              width: toCqi(CONCLUSION_BTN.width),
-              height: toCqi(CONCLUSION_BTN.height),
-            }}
-            onClick={() => setShowConclusion(true)}
-          />
+          {assets.today3 && (
+            <button
+              type="button"
+              className="climate-hotspot"
+              aria-label="결론 보러가기"
+              style={{
+                left: toCqi(CONCLUSION_BTN.left),
+                top: toCqi(CONCLUSION_BTN.top),
+                width: toCqi(CONCLUSION_BTN.width),
+                height: toCqi(CONCLUSION_BTN.height),
+              }}
+              onClick={() => setShowConclusion(true)}
+            />
+          )}
         </div>
       </main>
     )
@@ -173,7 +168,7 @@ function ClimateCompareScreen({ caseId, onExit }) {
 
   return (
     <main className="stage-wrap">
-      <div className="stage climate-stage" style={{ backgroundImage: `url(${today1Bg})` }}>
+      <div className="stage climate-stage" style={{ backgroundImage: `url(${assets.today1})` }}>
         <button
           type="button"
           className="climate-hotspot"

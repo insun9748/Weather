@@ -128,6 +128,13 @@ def generate_board_explanation(
     return _chat(system_prompt, user_prompt, fallback)
 
 
+# 사건별 "핵심 원인" 설명 — AI가 오늘 날씨와 비교할 때 기준으로 삼는 문구.
+_CLIMATE_CAUSE_BY_CASE = {
+    "2020_jangma": "아시아 여름 몬순 (지속적인 남서풍 + 높은 습도로 수증기가 계속 공급된 것)",
+    "2018_heatwave": "북태평양 고기압 강화 (평년보다 강하게 발달한 고기압으로 맑은 날이 이어지고 일조시간이 늘어 열이 축적된 것)",
+}
+
+
 def generate_climate_comparison(
     case: dict,
     location_name: str,
@@ -139,24 +146,23 @@ def generate_climate_comparison(
         f"{location_name}의 오늘 날씨 정보를 가져왔지만, AI 비교 설명은 지금 준비 중입니다. "
         "(OpenAI API 키를 설정하면 이 부분에 AI가 생성한 비교 설명이 표시됩니다)"
     )
+    cause = _CLIMATE_CAUSE_BY_CASE.get(case.get("case_id"), "이 사건의 핵심 기후 패턴")
 
     system_prompt = (
         "너는 초등학생을 대상으로 한 기후 탐정 게임의 친절한 기상 캐스터다. "
-        "2020년 사건의 핵심 원인은 아시아 여름 몬순(장기간 남서풍 + 높은 습도로 수증기가 "
-        "계속 공급된 것)이다. 오늘 날씨가 이 몬순 패턴과 '습도'와 '풍향' 두 가지 기준으로 "
-        "얼마나 비슷한지를 중심으로 판단해라: 풍향이 남서~서남서 계열이고 습도가 높을수록 "
-        "몬순과 비슷하고, 그렇지 않으면(예: 풍향이 다르거나 습도가 낮으면) 다르다고 설명해라. "
-        "기온이나 강수량은 참고만 하고 주된 판단 기준으로 삼지 마라. "
+        f"이 사건의 핵심 원인은 {cause}이다. 오늘 관측된 기온/습도/풍향/강수량 데이터 중 "
+        "이 원인과 관련 있는 값들을 근거로, 오늘 날씨가 사건 당시 패턴과 얼마나 비슷한지 "
+        "판단해서 설명해라. 관련 없는 값은 참고만 하고 주된 판단 기준으로 삼지 마라. "
         "5~6문장으로 좀 더 자세하게, 쉽고 재미있게 설명해라. "
         "반드시 100% 한국어로만 작성하고, 영어 단어나 문장은 절대 섞지 마라. 이모지는 어울리게 적절히 써도 좋다."
     )
     user_prompt = f"""사건: {case.get('title')} ({case.get('period')})
 사건 당시 기후 패턴(단계): {stage_labels}
 사건 설명: {case.get('description')}
-사건의 핵심 원인: 아시아 여름 몬순 (지속적인 남서풍 + 높은 습도)
+사건의 핵심 원인: {cause}
 
 사용자 위치: {location_name}
-오늘 관측된 날씨 데이터(습도 humidity %, 풍향 wind_direction 확인): {weather}
+오늘 관측된 날씨 데이터: {weather}
 
 사건 당시 기후와 오늘 {location_name}의 날씨를 비교해서 설명해줘.
 """

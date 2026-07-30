@@ -22,49 +22,15 @@
   z-index: 5;
 }
 
-.map-site-ocean {
-  left: 25.57%;
-  top: 13.94%;
-  width: 13.88%;
-  height: 28.07%;
-}
-
-.map-site-weather {
-  left: 54.69%;
-  top: 21.56%;
-  width: 15.52%;
-  height: 26.88%;
-}
-
-.map-site-satellite {
-  left: 30.52%;
-  top: 50.18%;
-  width: 17.08%;
-  height: 31.47%;
-}
-
 .map-site-stamp {
   position: absolute;
   object-fit: contain;
   pointer-events: none;
-  transform: scale(0.8) translateY(3cqi);
   z-index: 4;
-}
-
-.map-site-stamp.map-site-weather {
-  transform: scale(0.72) translateY(3cqi);
-}
-
-.map-site-stamp.map-site-satellite {
-  transform: scale(0.65) translateY(3cqi);
 }
 
 .map-detective {
   position: absolute;
-  left: 59.69%;
-  top: 69.07%;
-  width: 16.2%;
-  height: 26.49%;
   object-fit: contain;
   pointer-events: none;
 }

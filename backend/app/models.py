@@ -95,6 +95,6 @@ class ClimateCompareOut(BaseModel):
     precipitation: Optional[float] = None
     wind_direction: Optional[str] = None  # 예: "남서" — 몬순(남서풍) 여부 비교에 사용
     comparison_text: str
-    humidity_label: str  # "높음" | "낮음"
-    wind_label: str  # 예: "남서풍 (강함)"
-    is_similar: bool  # 오늘이 몬순(2020년 장마) 패턴과 비슷한지
+    metric1_label: str  # 사건별 첫번째 비교 기준 (2020: 습도 "높음"/"낮음", 2018: 기온 "높음"/"낮음")
+    metric2_label: str  # 사건별 두번째 비교 기준 (2020: 풍향 "남서풍 (강함)", 2018: 일조량 "높음"/"낮음")
+    is_similar: bool  # 오늘이 사건 당시 기후 패턴과 비슷한지

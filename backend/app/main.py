@@ -192,8 +192,12 @@ def check_causal_chain(case_id: str, submission: CheckSubmission):
     )
 
 
-# 2020_jangma 사건의 수사보드(board1.png) 정답. 프론트는 이 매핑을 모르는 상태로 제출만 함.
-BOARD_ANSWER = {"box1": "evi2", "box2": "evi3", "box3": "evi1"}
+# 사건별 수사보드 정답. 프론트는 이 매핑을 모르는 상태로 제출만 함.
+# 2018/2022 사건의 수사보드를 추가할 때는 여기에 한 줄씩 추가하면 된다.
+BOARD_ANSWERS = {
+    "2020_jangma": {"box1": "evi2", "box2": "evi3", "box3": "evi1"},
+    "2018_heatwave": {"box1": "evi2", "box2": "evi1", "box3": "evi3"},
+}
 
 
 @app.post("/cases/{case_id}/board-check", response_model=CheckResult)
@@ -202,6 +206,10 @@ def check_board(case_id: str, submission: BoardCheckIn):
     case = _cases.get(case_id)
     if not case:
         raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    BOARD_ANSWER = BOARD_ANSWERS.get(case_id)
+    if not BOARD_ANSWER:
+        raise HTTPException(status_code=404, detail="이 사건의 수사보드는 아직 준비되지 않았습니다")
 
     placement = {
         "box1": submission.box1,
@@ -260,11 +268,17 @@ def compare_climate(case_id: str, payload: ClimateCompareIn):
         location_name=station["name"],
         weather=weather_data,
     )
-    similarity = weather.classify_monsoon_similarity(
-        humidity=weather_data["humidity"],
-        wind_direction=weather_data["wind_direction"],
-        wind_speed=weather_data["wind_speed"],
-    )
+    if case_id == "2018_heatwave":
+        similarity = weather.classify_heatwave_similarity(
+            temperature=weather_data["temperature"],
+            precipitation=weather_data["precipitation"],
+        )
+    else:
+        similarity = weather.classify_monsoon_similarity(
+            humidity=weather_data["humidity"],
+            wind_direction=weather_data["wind_direction"],
+            wind_speed=weather_data["wind_speed"],
+        )
     return ClimateCompareOut(
         location_name=station["name"],
         temperature=weather_data["temperature"],

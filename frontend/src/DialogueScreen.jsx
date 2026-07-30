@@ -4,7 +4,7 @@ import './DialogueScreen.css'
 
 const TYPE_SPEED_MS = 35
 
-function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, voiceName }) {
+function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, bare, barBox, buttonBox, voiceName }) {
   const fullText = lines.join('\n')
   const [visibleCount, setVisibleCount] = useState(0)
 
@@ -68,11 +68,12 @@ function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick
     <main className="stage-wrap">
       <div className="stage" style={{ backgroundImage: `url(${background})` }}>
         <div
-          className={`dialogue-bar${panel ? ' dialogue-bar--panel' : ''}`}
+          className={`dialogue-bar${panel ? ' dialogue-bar--panel' : ''}${bare ? ' dialogue-bar--bare' : ''}`}
+          style={barBox}
           onClick={handleSkip}
         >
           <div className="dialogue-row">
-            <span className="speaker-name">{speaker}</span>
+            {!bare && <span className="speaker-name">{speaker}</span>}
             <p className="dialogue-text">
               {shownLines.map((line, index) => (
                 <span key={index}>
@@ -85,6 +86,7 @@ function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick
           <button
             className="next-hint"
             type="button"
+            style={buttonBox}
             onClick={(event) => {
               event.stopPropagation()
               onButtonClick?.()

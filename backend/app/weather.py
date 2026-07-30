@@ -136,7 +136,28 @@ def classify_monsoon_similarity(humidity, wind_direction, wind_speed) -> Dict:
     is_similar = humidity_label == "높음" and wind_direction in _MONSOON_WIND_DIRECTIONS
 
     return {
-        "humidity_label": humidity_label,
-        "wind_label": wind_label,
+        "metric1_label": humidity_label,
+        "metric2_label": wind_label,
+        "is_similar": is_similar,
+    }
+
+
+# 2018년 폭염의 핵심 특징: 높은 기온 + (강수가 없어 일조시간이 긴) 맑은 날씨.
+# 기상청 지상관측(kma_sfctm2)에는 일조시간 컬럼이 없어, 강수량 0mm를 "일조량 높음"의 대체 지표로 쓴다.
+_HEATWAVE_TEMP_THRESHOLD = 33.0  # 폭염주의보 기준(°C)과 동일하게 맞춤
+_SUNSHINE_PRECIPITATION_THRESHOLD = 0.5  # mm 미만이면 "일조량 높음"으로 간주
+
+
+def classify_heatwave_similarity(temperature, precipitation) -> Dict:
+    """기온/강수량만으로 오늘이 폭염(2018년) 패턴과 얼마나 비슷한지 규칙 기반으로 판정."""
+    temp_label = "높음" if temperature is not None and temperature >= _HEATWAVE_TEMP_THRESHOLD else "낮음"
+    sunshine_label = (
+        "높음" if precipitation is not None and precipitation < _SUNSHINE_PRECIPITATION_THRESHOLD else "낮음"
+    )
+    is_similar = temp_label == "높음" and sunshine_label == "높음"
+
+    return {
+        "metric1_label": temp_label,
+        "metric2_label": sunshine_label,
         "is_similar": is_similar,
     }

@@ -86,3 +86,31 @@
   font-size: 1.82cqi;
   font-weight: 700;
 }
+
+/* 배경 이미지 안에 이미 회색 바(+화자 이름표)가 그려져 있는 경우용 —
+   여기서는 대사 텍스트와 버튼만 그 바 위에 얹는다. */
+.dialogue-bar--bare {
+  left: 0;
+  right: 3.4%;
+  bottom: 0;
+  height: 34.7%;
+  background: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  padding: 0 4cqi 3cqi 9cqi;
+  justify-content: flex-end;
+}
+
+.dialogue-bar--bare .dialogue-row {
+  align-items: flex-start;
+}
+
+.dialogue-bar--bare .dialogue-text {
+  font-size: 2.1cqi;
+  line-height: 1.6;
+}
+
+.dialogue-bar--bare .next-hint {
+  right: 4cqi;
+  bottom: 2.6cqi;
+}

@@ -1,8 +1,4 @@
 import { useState } from 'react'
-import page5 from './assets/2020/common/page5.png'
-import page6 from './assets/2020/common/page6.png'
-import page7 from './assets/2020/common/page7.png'
-import page8 from './assets/2020/common/page8.png'
 import lensIcon from './assets/readingglasses.png'
 import './Stage.css'
 import './NotebookScreen.css'
@@ -16,27 +12,20 @@ const GLASS_CIRCLE_RATIO = 0.636
 const GLASS_CENTER_RATIO = 0.318
 const GLASS_INNER_RATIO = 0.5
 
-const PAGES = [
-  { key: 'case', src: page5 },
-  { key: 'ocean', src: page6 },
-  { key: 'weather', src: page7 },
-  { key: 'satellite', src: page8 },
-]
-
-function NotebookScreen({ onFinish }) {
+function NotebookScreen({ pages, tabs = [], onFinish }) {
   const [pageIndex, setPageIndex] = useState(0)
   const [lens, setLens] = useState(null)
 
-  const page = PAGES[pageIndex]
-  const showMagnifier = page.key === 'case'
+  const page = { src: pages[pageIndex] }
+  const showMagnifier = pageIndex === 0
 
   const goTo = (index) => {
-    if (index < 0 || index >= PAGES.length) return
+    if (index < 0 || index >= pages.length) return
     setPageIndex(index)
   }
 
   const goNext = () => {
-    if (pageIndex === PAGES.length - 1) {
+    if (pageIndex === pages.length - 1) {
       onFinish?.()
       return
     }
@@ -123,24 +112,15 @@ function NotebookScreen({ onFinish }) {
           aria-label="다음 페이지"
           onClick={goNext}
         />
-        <button
-          type="button"
-          className="nb-hit nb-tab-ocean"
-          aria-label="해양 관측소"
-          onClick={() => goTo(1)}
-        />
-        <button
-          type="button"
-          className="nb-hit nb-tab-weather"
-          aria-label="기상 관측소"
-          onClick={() => goTo(2)}
-        />
-        <button
-          type="button"
-          className="nb-hit nb-tab-satellite"
-          aria-label="위성 센터"
-          onClick={() => goTo(3)}
-        />
+        {tabs.map((tab, index) => (
+          <button
+            key={tab.label}
+            type="button"
+            className={`nb-hit nb-tab-${index + 1}`}
+            aria-label={tab.label}
+            onClick={() => goTo(tab.pageIndex)}
+          />
+        ))}
 
         {glassStyle && (
           <img className="magnifier-glass" src={lensIcon} alt="" style={glassStyle} />

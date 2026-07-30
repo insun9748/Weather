@@ -1,43 +1,59 @@
-import mapBg from './assets/2020/common/map1.png'
-import oceanBuilding from './assets/2020/common/building1.png'
-import satelliteBuilding from './assets/2020/common/building2.png'
-import weatherBuilding from './assets/2020/common/building3.png'
-import detective from './assets/2020/common/map_gisang.png'
 import buildingFinish from './assets/2020/common/building_finish.png'
 import './Stage.css'
 import './MapScreen.css'
 
-const SITES = [
-  { id: 'ocean', label: '해양관측소', image: oceanBuilding, className: 'map-site-ocean' },
-  { id: 'weather', label: '기상관측소', image: weatherBuilding, className: 'map-site-weather' },
-  { id: 'satellite', label: '위성센터', image: satelliteBuilding, className: 'map-site-satellite' },
-]
-
-function MapScreen({ onSelectSite, completedSites = [] }) {
+function MapScreen({ background, sites, detective, onSelectSite, completedSites = [] }) {
   return (
     <main className="stage-wrap">
-      <div className="stage map-stage" style={{ backgroundImage: `url(${mapBg})` }}>
-        {SITES.map((site) => (
+      <div className="stage map-stage" style={{ backgroundImage: `url(${background})` }}>
+        {sites.map((site) => (
           <button
             key={site.id}
             type="button"
-            className={`map-site ${site.className}`}
-            style={{ backgroundImage: `url(${site.image})` }}
+            className="map-site"
+            style={{
+              backgroundImage: `url(${site.image})`,
+              left: site.box.left,
+              top: site.box.top,
+              width: site.box.width,
+              height: site.box.height,
+            }}
             aria-label={site.label}
             onClick={() => onSelectSite?.(site.id)}
           />
         ))}
 
-        {SITES.filter((site) => completedSites.includes(site.id)).map((site) => (
-          <img
-            key={`${site.id}-stamp`}
-            className={`map-site-stamp ${site.className}`}
-            src={buildingFinish}
-            alt=""
-          />
-        ))}
+        {sites
+          .filter((site) => completedSites.includes(site.id))
+          .map((site) => (
+            <img
+              key={`${site.id}-stamp`}
+              className="map-site-stamp"
+              src={buildingFinish}
+              alt=""
+              style={{
+                left: site.box.left,
+                top: site.box.top,
+                width: site.box.width,
+                height: site.box.height,
+                transform: `scale(${site.stampScale ?? 0.8}) translateY(3cqi)`,
+              }}
+            />
+          ))}
 
-        <img className="map-detective" src={detective} alt="" />
+        {detective && (
+          <img
+            className="map-detective"
+            src={detective.image}
+            alt=""
+            style={{
+              left: detective.box.left,
+              top: detective.box.top,
+              width: detective.box.width,
+              height: detective.box.height,
+            }}
+          />
+        )}
       </div>
     </main>
   )

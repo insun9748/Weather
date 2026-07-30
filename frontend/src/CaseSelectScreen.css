@@ -78,27 +78,3 @@
   width: auto;
   display: block;
 }
-
-.case-start-button {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  transform: translateX(-50%);
-  min-width: 13cqi;
-  padding: 1.1cqi 2.4cqi;
-  font-family: 'Pretendard', 'PyeongChang', sans-serif;
-  font-weight: 700;
-  font-size: 1.7cqi;
-  color: #ffffff;
-  background: #ff9b19;
-  border: none;
-  border-bottom: 0.35cqi solid #df7f00;
-  border-radius: 1cqi;
-  cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.case-start-button:hover {
-  filter: brightness(1.05);
-  transform: translateX(-50%) translateY(-0.1cqi);
-}
