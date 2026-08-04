@@ -42,7 +42,8 @@ function App() {
     const next = completedSites.includes(siteId) ? completedSites : [...completedSites, siteId]
     setCompletedSites(next)
     logEvent('site_complete', siteId)
-    setScreen(ALL_SITES.every((id) => next.includes(id)) ? 'caseFinale' : 'map')
+    const allDone = ALL_SITES.every((id) => next.includes(id))
+    setScreen(allDone && c.caseFinale ? 'caseFinale' : 'map')
   }
 
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -70,28 +71,43 @@ function App() {
     }
 
     if (currentScreen === `${prefix}Quiz`) {
+      const options = site.quiz.options.map((opt) => ({
+        label: opt.label,
+        ...opt.box,
+        onClick: () => {
+          logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', `${siteKey}_q1_${opt.outcome}`)
+          setScreen(opt.outcome === 'correct' ? `${prefix}Correct` : `${prefix}${cap(opt.outcome)}`)
+        },
+      }))
+      // 일부 사이트(예: 위성센터)는 자료를 확대해서 보는 돋보기 버튼이 하나 더 있다.
+      if (site.quiz.zoomLabel) {
+        options.unshift({
+          label: site.quiz.zoomLabel,
+          ...site.quiz.zoomBox,
+          onClick: () => {
+            logEvent('inspect_data', `${siteKey}_zoom`)
+            setScreen(`${prefix}Zoom`)
+          },
+        })
+      }
+      return <QuizScreen background={site.quiz.background} options={options} />
+    }
+
+    if (currentScreen === `${prefix}Zoom`) {
       return (
-        <QuizScreen
-          background={site.quiz.background}
-          options={site.quiz.options.map((opt) => ({
-            label: opt.label,
-            ...opt.box,
-            onClick: () => {
-              logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', `${siteKey}_q1_${opt.outcome}`)
-              setScreen(opt.outcome === 'correct' ? `${prefix}Correct` : `${prefix}${cap(opt.outcome)}`)
-            },
-          }))}
+        <PhotoScreen
+          background={site.zoom.background}
+          hotspot={{ label: '문제로 가기', ...site.zoom.backBox, onClick: () => setScreen(`${prefix}Quiz`) }}
         />
       )
     }
 
     if (currentScreen === `${prefix}Correct`) {
-      return (
-        <PhotoScreen
-          background={site.correct.background}
-          hotspot={{ label: '다음 문제로', ...site.correct.nextBox, onClick: () => setScreen(`${prefix}Quiz2`) }}
-        />
-      )
+      // quiz2가 없는(퀴즈 한 판만 있는) 사이트는 correct 화면에서 바로 힌트로 간다.
+      const hotspot = site.quiz2
+        ? { label: '다음 문제로', ...site.correct.nextBox, onClick: () => setScreen(`${prefix}Quiz2`) }
+        : { label: '획득한 단서 보기', ...site.correct.hintBox, onClick: () => setScreen(`${prefix}Hint`) }
+      return <PhotoScreen background={site.correct.background} hotspot={hotspot} />
     }
 
     if (currentScreen === `${prefix}Quiz2`) {
@@ -147,11 +163,22 @@ function App() {
       const key = outcomeKey.charAt(0).toLowerCase() + outcomeKey.slice(1)
       const wrong = site[key]
       if (wrong?.background && wrong?.retryTarget) {
+        const retryScreen = `${prefix}${cap(wrong.retryTarget)}`
+        // 이미지에 "다시 풀기" 버튼이 이미 그려져 있는 경우엔 투명 히트존(retryHotspot)을,
+        // 아니라면 코드가 그리는 불투명 버튼(retryBox)을 쓴다.
+        if (wrong.retryHotspot) {
+          return (
+            <PhotoScreen
+              background={wrong.background}
+              hotspot={{ label: '다시 풀기', ...wrong.retryHotspot, onClick: () => setScreen(retryScreen) }}
+            />
+          )
+        }
         return (
           <PhotoScreen
             background={wrong.background}
             buttonLabel="다시 풀기"
-            onButtonClick={() => setScreen(`${prefix}${cap(wrong.retryTarget)}`)}
+            onButtonClick={() => setScreen(retryScreen)}
             buttonStyle={wrong.retryBox}
             solidButton
           />
@@ -166,6 +193,12 @@ function App() {
   if (weatherScreen) return weatherScreen
   const climateScreen = renderSiteScreen('climate', 'climate', screen)
   if (climateScreen) return climateScreen
+  const oceanScreen = renderSiteScreen('ocean', 'ocean', screen)
+  if (oceanScreen) return oceanScreen
+  const typhoonScreen = renderSiteScreen('typhoon', 'typhoon', screen)
+  if (typhoonScreen) return typhoonScreen
+  const satelliteScreen = renderSiteScreen('satellite', 'satellite', screen)
+  if (satelliteScreen) return satelliteScreen
 
   if (screen === 'greeting') {
     return (
@@ -223,7 +256,8 @@ function App() {
       <NotebookScreen
         pages={c.notebook.pages}
         tabs={c.notebook.tabs}
-        onFinish={() => setScreen(c.briefing ? 'briefing' : 'map')}
+        finishBox={c.notebook.finishBox}
+        onFinish={() => setScreen(c.startInvestigation ? 'startInvestigation' : c.briefing ? 'briefing' : 'map')}
       />
     )
   }
@@ -234,6 +268,21 @@ function App() {
         background={c.briefing.background}
         buttonLabel="네! 열심히 해볼게요"
         onButtonClick={() => setScreen('map')}
+      />
+    )
+  }
+
+  if (screen === 'startInvestigation') {
+    return (
+      <DialogueScreen
+        background={c.startInvestigation.background}
+        speaker="기상이"
+        lines={withNickname(c.startInvestigation.lines, nickname)}
+        buttonLabel={c.startInvestigation.buttonLabel}
+        onButtonClick={() => setScreen(c.startInvestigation.nextScreen ?? 'map')}
+        bare
+        barBox={c.startInvestigation.barBox}
+        buttonBox={c.startInvestigation.buttonBox}
       />
     )
   }
@@ -249,6 +298,7 @@ function App() {
           if (siteId === 'weather') setScreen('weatherDialogue')
           if (siteId === 'satellite') setScreen('satelliteDialogue')
           if (siteId === 'climate') setScreen('climateDialogue')
+          if (siteId === 'typhoon') setScreen('typhoonDialogue')
         }}
         completedSites={completedSites}
       />
@@ -279,182 +329,6 @@ function App() {
     )
   }
 
-  if (screen === 'oceanDialogue') {
-    return (
-      <DialogueScreen
-        background={c.sites.ocean.dialogue.background}
-        speaker={c.sites.ocean.dialogue.speaker}
-        lines={withNickname(c.sites.ocean.dialogue.lines, nickname)}
-        buttonLabel="추리하러 가기"
-        onButtonClick={() => setScreen('oceanQuiz')}
-        voiceName={c.sites.ocean.dialogue.voiceName}
-        panel
-      />
-    )
-  }
-
-  if (screen === 'satelliteDialogue') {
-    return (
-      <DialogueScreen
-        background={c.sites.satellite.dialogue.background}
-        speaker={c.sites.satellite.dialogue.speaker}
-        lines={withNickname(c.sites.satellite.dialogue.lines, nickname)}
-        buttonLabel="추리하러 가기"
-        onButtonClick={() => setScreen('satelliteQuiz')}
-        voiceName={c.sites.satellite.dialogue.voiceName}
-        panel
-      />
-    )
-  }
-
-  if (screen === 'satelliteQuiz') {
-    const [wrong1, correct, wrong2] = c.sites.satellite.quiz.options
-    return (
-      <QuizScreen
-        background={c.sites.satellite.quiz.background}
-        options={[
-          {
-            label: c.sites.satellite.quiz.zoomLabel,
-            left: '38.54cqi',
-            top: '41.67cqi',
-            width: '5.73cqi',
-            height: '5.73cqi',
-            onClick: () => {
-              logEvent('inspect_data', 'satellite_zoom')
-              setScreen('satelliteZoom')
-            },
-          },
-          {
-            label: wrong1.label,
-            left: '50.83cqi',
-            top: '21.61cqi',
-            width: '41.51cqi',
-            height: '4.79cqi',
-            onClick: () => {
-              logEvent('wrong_answer', 'satellite_q1_north')
-              setScreen('satelliteWrong1')
-            },
-          },
-          {
-            label: correct.label,
-            left: '50.83cqi',
-            top: '28.28cqi',
-            width: '41.56cqi',
-            height: '4.74cqi',
-            onClick: () => {
-              logEvent('correct_answer', 'satellite_q1')
-              setScreen('satelliteCorrect')
-            },
-          },
-          {
-            label: wrong2.label,
-            left: '50.83cqi',
-            top: '35.00cqi',
-            width: '41.56cqi',
-            height: '4.69cqi',
-            onClick: () => {
-              logEvent('wrong_answer', 'satellite_q1_disappear')
-              setScreen('satelliteWrong2')
-            },
-          },
-        ]}
-      />
-    )
-  }
-
-  if (screen === 'satelliteZoom') {
-    return (
-      <PhotoScreen
-        background={c.sites.satellite.zoom.background}
-        hotspot={{
-          label: '문제로 가기',
-          left: '79.01cqi',
-          top: '2.34cqi',
-          width: '17.29cqi',
-          height: '3.75cqi',
-          onClick: () => setScreen('satelliteQuiz'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'satelliteWrong1') {
-    return (
-      <PhotoScreen
-        background={c.sites.satellite.wrong1.background}
-        hotspot={{
-          label: '다시 풀기',
-          left: '78.44cqi',
-          top: '44.79cqi',
-          width: '13.70cqi',
-          height: '3.75cqi',
-          onClick: () => setScreen('satelliteQuiz'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'satelliteWrong2') {
-    return (
-      <PhotoScreen
-        background={c.sites.satellite.wrong2.background}
-        buttonLabel="다시 풀기"
-        onButtonClick={() => setScreen('satelliteQuiz')}
-        buttonStyle={{ right: '7cqi', bottom: '7cqi' }}
-        solidButton
-      />
-    )
-  }
-
-  if (screen === 'satelliteCorrect') {
-    return (
-      <PhotoScreen
-        background={c.sites.satellite.correct.background}
-        hotspot={{
-          label: '획득한 단서 보기',
-          left: '41.35cqi',
-          top: '38.49cqi',
-          width: '17.29cqi',
-          height: '3.75cqi',
-          onClick: () => setScreen('satelliteHint'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'satelliteHint') {
-    return (
-      <HintCardScreen
-        background={c.sites.satellite.hint.background}
-        frontImage={c.sites.satellite.hint.frontImage}
-        backImage={c.sites.satellite.hint.backImage}
-        hotspot={{
-          label: '탐정 수첩 채우기',
-          left: '33.16%',
-          top: '72.39%',
-          width: '33.83%',
-          height: '7.29%',
-          onClick: () => setScreen('satelliteNotebook'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'satelliteNotebook') {
-    return (
-      <PhotoScreen
-        background={c.sites.satellite.notebook.background}
-        hotspot={{
-          label: '지도로 돌아가기',
-          left: '83.54cqi',
-          top: '2.71cqi',
-          width: '13.33cqi',
-          height: '4.58cqi',
-          onClick: () => finishSite('satellite'),
-        }}
-      />
-    )
-  }
 
   if (screen === 'caseFinale') {
     return (
@@ -468,185 +342,6 @@ function App() {
         bare={c.caseFinale.bare}
         barBox={c.caseFinale.barBox}
         buttonBox={c.caseFinale.buttonBox}
-      />
-    )
-  }
-
-  if (screen === 'oceanQuiz') {
-    const [correct, wrong] = c.sites.ocean.quiz.options
-    return (
-      <QuizScreen
-        background={c.sites.ocean.quiz.background}
-        options={[
-          {
-            label: correct.label,
-            left: '44.84cqi',
-            top: '22.03cqi',
-            width: '43.44cqi',
-            height: '6.46cqi',
-            onClick: () => {
-              logEvent('correct_answer', 'ocean_q1')
-              setScreen('oceanCorrect')
-            },
-          },
-          {
-            label: wrong.label,
-            left: '44.84cqi',
-            top: '30.05cqi',
-            width: '43.44cqi',
-            height: '6.46cqi',
-            onClick: () => {
-              logEvent('wrong_answer', 'ocean_q1')
-              setScreen('oceanWrong')
-            },
-          },
-        ]}
-      />
-    )
-  }
-
-  if (screen === 'oceanCorrect') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.correct.background}
-        hotspot={{
-          label: '다음 문제로',
-          left: '41.41cqi',
-          top: '38.13cqi',
-          width: '17.19cqi',
-          height: '4.06cqi',
-          onClick: () => setScreen('oceanQuiz2'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'oceanQuiz2') {
-    const [correct, wrong2a, wrong2b] = c.sites.ocean.quiz2.options
-    return (
-      <QuizScreen
-        background={c.sites.ocean.quiz2.background}
-        options={[
-          {
-            label: correct.label,
-            left: '22.86cqi',
-            top: '20.16cqi',
-            width: '54.27cqi',
-            height: '5.94cqi',
-            onClick: () => {
-              logEvent('correct_answer', 'ocean_q2')
-              setScreen('oceanCorrect2')
-            },
-          },
-          {
-            label: wrong2a.label,
-            left: '22.86cqi',
-            top: '28.18cqi',
-            width: '54.27cqi',
-            height: '5.94cqi',
-            onClick: () => {
-              logEvent('wrong_answer', 'ocean_q2_cold_water')
-              setScreen('oceanWrong2a')
-            },
-          },
-          {
-            label: wrong2b.label,
-            left: '22.86cqi',
-            top: '36.20cqi',
-            width: '54.27cqi',
-            height: '5.94cqi',
-            onClick: () => {
-              logEvent('wrong_answer', 'ocean_q2_rain_over_sea')
-              setScreen('oceanWrong2b')
-            },
-          },
-        ]}
-      />
-    )
-  }
-
-  if (screen === 'oceanCorrect2') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.correct2.background}
-        hotspot={{
-          label: '획득한 단서 보기',
-          left: '41.35cqi',
-          top: '37.76cqi',
-          width: '17.29cqi',
-          height: '4.64cqi',
-          onClick: () => setScreen('oceanHint'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'oceanHint') {
-    return (
-      <HintCardScreen
-        background={c.sites.ocean.hint.background}
-        frontImage={c.sites.ocean.hint.frontImage}
-        backImage={c.sites.ocean.hint.backImage}
-        hotspot={{
-          label: '탐정 수첩 채우기',
-          left: '30.72%',
-          top: '72.79%',
-          width: '33.77%',
-          height: '8.89%',
-          onClick: () => setScreen('oceanNotebook'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'oceanNotebook') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.notebook.background}
-        hotspot={{
-          label: '지도로 돌아가기',
-          left: '82.33cqi',
-          top: '1.03cqi',
-          width: '14.71cqi',
-          height: '6.58cqi',
-          onClick: () => finishSite('ocean'),
-        }}
-      />
-    )
-  }
-
-  if (screen === 'oceanWrong') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.wrong.background}
-        buttonLabel="다시 풀기"
-        onButtonClick={() => setScreen('oceanQuiz')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
-        solidButton
-      />
-    )
-  }
-
-  if (screen === 'oceanWrong2a') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.wrong2a.background}
-        buttonLabel="다시 풀기"
-        onButtonClick={() => setScreen('oceanQuiz2')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
-        solidButton
-      />
-    )
-  }
-
-  if (screen === 'oceanWrong2b') {
-    return (
-      <PhotoScreen
-        background={c.sites.ocean.wrong2b.background}
-        buttonLabel="다시 풀기"
-        onButtonClick={() => setScreen('oceanQuiz2')}
-        buttonStyle={{ right: '8cqi', bottom: '9cqi' }}
-        solidButton
       />
     )
   }

@@ -32,6 +32,9 @@ function getCurrentPosition() {
 }
 
 function ClimateCompareScreen({ caseId, assets, onExit }) {
+  // 카드 안 "높음"/"발생하지 않음" 같은 값 텍스트의 세로 위치를 사건별로 살짝 보정할 때 사용.
+  const metricValueTop = METRIC1_VALUE_AREA.top - (assets.metricValueOffsetY ?? 0)
+
   const [status, setStatus] = useState('idle') // idle | locating | comparing | done | error
   const [result, setResult] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
@@ -89,7 +92,7 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
             className="climate-value-box"
             style={{
               left: toCqi(METRIC1_VALUE_AREA.left),
-              top: toCqi(METRIC1_VALUE_AREA.top),
+              top: toCqi(metricValueTop),
               width: toCqi(METRIC1_VALUE_AREA.width),
               height: toCqi(METRIC1_VALUE_AREA.height),
             }}
@@ -100,7 +103,7 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
             className="climate-value-box"
             style={{
               left: toCqi(METRIC2_VALUE_AREA.left),
-              top: toCqi(METRIC2_VALUE_AREA.top),
+              top: toCqi(metricValueTop),
               width: toCqi(METRIC2_VALUE_AREA.width),
               height: toCqi(METRIC2_VALUE_AREA.height),
             }}

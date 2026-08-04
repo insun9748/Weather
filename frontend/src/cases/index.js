@@ -3,10 +3,12 @@
 //   2. 아래에 한 줄씩 추가하면 App.jsx/BoardScreen.jsx/ClimateCompareScreen.jsx는 그대로 재사용된다.
 import case2020 from './2020'
 import case2018 from './2018'
+import case2022 from './2022'
 
 export const CASES = {
   '2020': case2020,
   '2018': case2018,
+  '2022': case2022,
 }
 
 export function getCase(caseKey) {

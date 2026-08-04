@@ -161,3 +161,21 @@ def classify_heatwave_similarity(temperature, precipitation) -> Dict:
         "metric2_label": sunshine_label,
         "is_similar": is_similar,
     }
+
+
+# 2022년 수도권 집중호우의 핵심 특징: 태풍(힌남노)이 따뜻한 해역에서 열/수증기를 공급받은 것.
+# 기상청 지상관측(kma_sfctm2)에는 해수면 수온이 없어 기온을 대신 쓰고(자료 화면에도 이 대체 설명이
+# 나와 있음), 실시간 태풍 발생 여부 데이터는 아직 연동 전이라 "발생하지 않음"으로 고정해둔다.
+_SEA_TEMP_THRESHOLD = 27.0
+
+
+def classify_flood_similarity(temperature) -> Dict:
+    """기온(해수면 온도 대체 지표)만으로 오늘이 2022년 태풍 패턴과 얼마나 비슷한지 규칙 기반으로 판정."""
+    sea_temp_label = "높음" if temperature is not None and temperature >= _SEA_TEMP_THRESHOLD else "낮음"
+    typhoon_label = "발생하지 않음"  # TODO: 실시간 태풍 발생 여부 API 연동 전까지 고정값
+
+    return {
+        "metric1_label": sea_temp_label,
+        "metric2_label": typhoon_label,
+        "is_similar": sea_temp_label == "높음",
+    }

@@ -197,6 +197,7 @@ def check_causal_chain(case_id: str, submission: CheckSubmission):
 BOARD_ANSWERS = {
     "2020_jangma": {"box1": "evi2", "box2": "evi3", "box3": "evi1"},
     "2018_heatwave": {"box1": "evi2", "box2": "evi1", "box3": "evi3"},
+    "2022_flood": {"box1": "evi1", "box2": "evi2", "box3": "evi3"},
 }
 
 
@@ -273,6 +274,8 @@ def compare_climate(case_id: str, payload: ClimateCompareIn):
             temperature=weather_data["temperature"],
             precipitation=weather_data["precipitation"],
         )
+    elif case_id == "2022_flood":
+        similarity = weather.classify_flood_similarity(temperature=weather_data["temperature"])
     else:
         similarity = weather.classify_monsoon_similarity(
             humidity=weather_data["humidity"],
