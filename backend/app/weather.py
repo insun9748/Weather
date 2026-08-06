@@ -11,6 +11,11 @@ from typing import Dict, Optional
 import httpx
 
 KMA_URL = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php"
+BUOY_URL = "https://apihub.kma.go.kr/api/typ01/url/kma_buoy.php"
+TYPHOON_URL = "https://apihub.kma.go.kr/api/typ01/url/typ_now.php"
+
+# 2022년 힌남노 태풍이 지나간 남해 인근 부이 (해수면 온도 조회 기본값).
+DEFAULT_BUOY_STATION = 22107
 
 # 전국을 대략적으로 커버하는 주요 ASOS 관측소 발췌 (station id, 이름, 위경도).
 STATIONS = [
@@ -117,6 +122,56 @@ def fetch_kma_weather(station_id: int) -> Optional[Dict]:
         return None
 
 
+def fetch_sea_surface_temperature(station_id: int = DEFAULT_BUOY_STATION) -> Optional[float]:
+    """해양기상부이(kma_buoy)에서 해수면 온도(TW, 12번째 컬럼)를 가져온다. 실패하면 None."""
+    auth_key = os.environ.get("KMA_AUTH_KEY", "").strip()
+    if not auth_key or "여기에" in auth_key:
+        return None
+
+    try:
+        res = httpx.get(
+            BUOY_URL,
+            params={"tm": 0, "stn": station_id, "help": 1, "authKey": auth_key},
+            timeout=8,
+        )
+        res.raise_for_status()
+        text = res.content.decode("euc-kr", errors="ignore")
+    except Exception:
+        return None
+
+    data_lines = [line for line in text.splitlines() if line.strip() and not line.startswith("#")]
+    if not data_lines:
+        return None
+
+    # tm=0은 최근 구간 여러 줄을 시간순으로 주므로 가장 마지막(최신) 줄을 쓴다.
+    cols = data_lines[-1].split()
+    try:
+        return _parse_value(cols[11])  # TW: 해수면 온도(C)
+    except IndexError:
+        return None
+
+
+def is_typhoon_active() -> Optional[bool]:
+    """북서태평양에 현재 진행 중인 태풍이 있는지(typ_now) 확인한다. 조회 실패 시 None."""
+    auth_key = os.environ.get("KMA_AUTH_KEY", "").strip()
+    if not auth_key or "여기에" in auth_key:
+        return None
+
+    try:
+        res = httpx.get(
+            TYPHOON_URL,
+            params={"tm": 0, "mode": 1, "disp": 0, "help": 1, "authKey": auth_key},
+            timeout=8,
+        )
+        res.raise_for_status()
+        text = res.content.decode("euc-kr", errors="ignore")
+    except Exception:
+        return None
+
+    data_lines = [line for line in text.splitlines() if line.strip() and not line.startswith("#")]
+    return len(data_lines) > 0
+
+
 # 몬순(아시아 여름 몬순)의 핵심 특징: 남서~서남서 계열 바람 + 높은 습도.
 _MONSOON_WIND_DIRECTIONS = {"남서", "남남서", "서남서"}
 _HUMID_THRESHOLD = 70.0  # % 이상이면 "높음"
@@ -164,15 +219,14 @@ def classify_heatwave_similarity(temperature, precipitation) -> Dict:
 
 
 # 2022년 수도권 집중호우의 핵심 특징: 태풍(힌남노)이 따뜻한 해역에서 열/수증기를 공급받은 것.
-# 기상청 지상관측(kma_sfctm2)에는 해수면 수온이 없어 기온을 대신 쓰고(자료 화면에도 이 대체 설명이
-# 나와 있음), 실시간 태풍 발생 여부 데이터는 아직 연동 전이라 "발생하지 않음"으로 고정해둔다.
 _SEA_TEMP_THRESHOLD = 27.0
 
 
-def classify_flood_similarity(temperature) -> Dict:
-    """기온(해수면 온도 대체 지표)만으로 오늘이 2022년 태풍 패턴과 얼마나 비슷한지 규칙 기반으로 판정."""
-    sea_temp_label = "높음" if temperature is not None and temperature >= _SEA_TEMP_THRESHOLD else "낮음"
-    typhoon_label = "발생하지 않음"  # TODO: 실시간 태풍 발생 여부 API 연동 전까지 고정값
+def classify_flood_similarity(sea_temp: Optional[float], typhoon_active: Optional[bool]) -> Dict:
+    """해수면 온도(부이 실측)와 현재 태풍 발생 여부(실시간 조회)로 2022년 패턴과 얼마나 비슷한지 판정.
+    두 값 다 조회에 실패하면(None) 안전하게 "낮음"/"발생하지 않음"으로 처리한다."""
+    sea_temp_label = "높음" if sea_temp is not None and sea_temp >= _SEA_TEMP_THRESHOLD else "낮음"
+    typhoon_label = "발생함" if typhoon_active else "발생하지 않음"
 
     return {
         "metric1_label": sea_temp_label,

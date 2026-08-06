@@ -73,14 +73,24 @@ import evi2WrongImg from '../assets/2022/evi2_x.png'
 import evi3WrongImg from '../assets/2022/evi3_x.png'
 import gisangImg from '../assets/2020/common/gisang.png'
 
-// 해양관측소/국가태풍센터/위성센터 대화 화면(ocean.png, typoon.png, satellite.png)은 같은
-// 템플릿이라 어두운 바 위치가 동일하다. 바 자체는 이미지에 이미 그려져 있어 bare 모드로,
-// 위치만 이 값으로 덮어쓴다 (stage 바로 아래 자식이라 cqi 아닌 일반 %를 쓴다).
-// padding/justifyContent는 바 안에서 글자(화자명+대사)가 시작하는 위치 — Figma 실측:
-// 화자명 좌상단이 바 좌상단에서 (62px,50px) 안쪽 지점, 바 크기는 1769x323px 기준.
+// 해양관측소/국가태풍센터 대화 화면(ocean.png, typoon.png)은 같은 템플릿이라 바 위치가 동일하다.
+// 바 자체는 이미지에 이미 그려져 있어 bare 모드로, 위치만 이 값으로 덮어쓴다
+// (stage 바로 아래 자식이라 cqi 아닌 일반 %를 쓴다).
+// padding/justifyContent는 바 안에서 "대사 텍스트"가 시작하는 위치 — 화자명(예: 국가태풍센터)은
+// 이미지에 이미 그려져 있고 code는 렌더링하지 않으므로, 대사가 화자명 바로 옆에서 시작하도록
+// 화자명 기준이 아니라 대사 텍스트 자체의 Figma 좌표로 padding을 계산해야 한다.
+// Figma 실측(ocean, 1920x1080 기준): 바 left=75,top=731,w=1769,h=323 / 대사 left=390,top=781
+// -> paddingLeft=(390-75)/1769=17.81%, paddingTop=(781-731)/1769=2.83%
 const SITE_INTRO_BAR_BOX = {
   left: '3.91%', top: '67.69%', width: '92.14%', height: '29.91%', right: 'auto', bottom: 'auto',
-  justifyContent: 'flex-start', paddingTop: '2.83%', paddingLeft: '3.50%',
+  justifyContent: 'flex-start', paddingTop: '2.83%', paddingLeft: '17.81%',
+}
+// 위성센터(satellite.png)는 바 크기가 조금 다르다(같은 템플릿이지만 상단이 15px 더 높음).
+// Figma 실측: 바 left=75,top=716,w=1769,h=338 / 대사 left=410,top=759
+// -> paddingLeft=(410-75)/1769=18.93%, paddingTop=(759-716)/1769=2.43%
+const SATELLITE_BAR_BOX = {
+  left: '3.91%', top: '66.30%', width: '92.14%', height: '31.30%', right: 'auto', bottom: 'auto',
+  justifyContent: 'flex-start', paddingTop: '2.43%', paddingLeft: '18.93%',
 }
 const RETRY_BOX = { right: '7cqi', bottom: '6cqi' }
 const NOTEBOOK_RETURN_BOX = { left: '85.10cqi', top: '2.03cqi', width: '12.76cqi', height: '3.85cqi' }
@@ -254,7 +264,7 @@ const case2022 = {
         background: satelliteDialogueBg,
         speaker: '위성센터',
         bare: true,
-        barBox: SITE_INTRO_BAR_BOX,
+        barBox: SATELLITE_BAR_BOX,
         lines: [
           '안녕하세요 {nickname} 조수님.',
           '저희 위성센터(국가기상위성센터)는 기상위성으로 촬영한 영상을',

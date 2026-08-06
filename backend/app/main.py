@@ -264,24 +264,30 @@ def compare_climate(case_id: str, payload: ClimateCompareIn):
     if weather_data is None:
         raise HTTPException(status_code=502, detail="오늘 날씨 정보를 가져오지 못했습니다")
 
-    comparison_text = ai.generate_climate_comparison(
-        case=case,
-        location_name=station["name"],
-        weather=weather_data,
-    )
     if case_id == "2018_heatwave":
         similarity = weather.classify_heatwave_similarity(
             temperature=weather_data["temperature"],
             precipitation=weather_data["precipitation"],
         )
+        ai_weather_data = weather_data
     elif case_id == "2022_flood":
-        similarity = weather.classify_flood_similarity(temperature=weather_data["temperature"])
+        sea_temp = weather.fetch_sea_surface_temperature()
+        typhoon_active = weather.is_typhoon_active()
+        similarity = weather.classify_flood_similarity(sea_temp=sea_temp, typhoon_active=typhoon_active)
+        ai_weather_data = {**weather_data, "sea_surface_temperature": sea_temp, "typhoon_active": typhoon_active}
     else:
         similarity = weather.classify_monsoon_similarity(
             humidity=weather_data["humidity"],
             wind_direction=weather_data["wind_direction"],
             wind_speed=weather_data["wind_speed"],
         )
+        ai_weather_data = weather_data
+
+    comparison_text = ai.generate_climate_comparison(
+        case=case,
+        location_name=station["name"],
+        weather=ai_weather_data,
+    )
     return ClimateCompareOut(
         location_name=station["name"],
         temperature=weather_data["temperature"],
