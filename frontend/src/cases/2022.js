@@ -141,6 +141,13 @@ const case2022 = {
       '이제 찾은 단서를 토대로 범인을 찾아 보게나!',
     ],
     buttonLabel: '네!',
+    // map_complete.png(1920x1090) 실측: 바 top=743,height=347(전체 너비) / "기상이" 라벨
+    // left=148,top=790 -> 대사는 라벨 옆에서 시작하도록 paddingLeft/paddingTop으로 위치 지정.
+    barBox: {
+      left: '0%', top: '68.17%', width: '100%', height: '31.83%', right: 'auto', bottom: 'auto',
+      justifyContent: 'flex-start', paddingTop: '2.45%', paddingLeft: '17.08%',
+    },
+    buttonBox: { right: '7cqi', bottom: '5cqi' },
   },
 
   climateCompare: {
