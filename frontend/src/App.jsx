@@ -21,7 +21,9 @@ function App() {
   const [screen, setScreen] = useState(
     () => new URLSearchParams(window.location.search).get('screen') || 'home',
   )
-  const [caseKey, setCaseKey] = useState('2020')
+  const [caseKey, setCaseKey] = useState(
+    () => new URLSearchParams(window.location.search).get('case') || '2020',
+  )
   const [user, setUser] = useState(null)
   const [completedSites, setCompletedSites] = useState([])
   const nickname = user?.nickname ?? ''
@@ -66,6 +68,8 @@ function App() {
           voiceName={site.dialogue.voiceName}
           panel={!site.dialogue.bare}
           bare={site.dialogue.bare}
+          barBox={site.dialogue.barBox}
+          buttonBox={site.dialogue.buttonBox}
         />
       )
     }
