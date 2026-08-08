@@ -87,3 +87,20 @@
   object-fit: contain;
   pointer-events: none;
 }
+
+.climate-solution-btn {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.55);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 800;
+  font-size: 1.6cqi;
+  text-align: center;
+}
+
+.climate-solution-btn:hover {
+  background: rgba(255, 255, 255, 0.75);
+}

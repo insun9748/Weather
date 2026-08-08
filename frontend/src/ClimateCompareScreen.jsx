@@ -12,6 +12,7 @@ const STATUS_AREA = { left: 480, top: 400, width: 960, height: 300 }
 
 const CONCLUSION_BTN = { left: 765, top: 845, width: 395, height: 105 }
 const RESULT_AREA = { left: 480, top: 260, width: 960, height: 560 }
+const SOLUTION_BTN = { left: 1470, top: 945, width: 360, height: 55 }
 
 const TITLE_AREA = { top: 180, height: 45 }
 const RIBBON_AREA = { left: 375, top: 836, width: 1065, height: 185.41 }
@@ -35,10 +36,27 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
   // 카드 안 "높음"/"발생하지 않음" 같은 값 텍스트의 세로 위치를 사건별로 살짝 보정할 때 사용.
   const metricValueTop = METRIC1_VALUE_AREA.top - (assets.metricValueOffsetY ?? 0)
 
-  const [status, setStatus] = useState('idle') // idle | locating | comparing | done | error
-  const [result, setResult] = useState(null)
+  // 테스트용: ?mockClimate=1 이면 위치확인/백엔드 호출 없이 바로 결과 화면부터 시작.
+  const isMock = new URLSearchParams(window.location.search).get('mockClimate') === '1'
+  const [status, setStatus] = useState(isMock ? 'done' : 'idle') // idle | locating | comparing | done | error
+  const [result, setResult] = useState(
+    isMock
+      ? {
+          location_name: '테스트 위치',
+          temperature: 30,
+          humidity: 80,
+          wind_direction: '남서',
+          precipitation: 0,
+          comparison_text: '(테스트용 더미 비교 텍스트입니다)',
+          metric1_label: '높음',
+          metric2_label: '발생함',
+          is_similar: true,
+        }
+      : null,
+  )
   const [errorMsg, setErrorMsg] = useState('')
   const [showConclusion, setShowConclusion] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
 
   const run = async () => {
     setStatus('locating')
@@ -59,6 +77,27 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
       )
       setStatus('error')
     }
+  }
+
+  if (showSolution && assets.solution) {
+    return (
+      <main className="stage-wrap">
+        <div className="stage climate-stage" style={{ backgroundImage: `url(${assets.solution})` }}>
+          <button
+            type="button"
+            className="climate-hotspot"
+            aria-label="수사 끝내기"
+            style={{
+              left: toCqi(EXIT_BTN.left),
+              top: toCqi(EXIT_BTN.top),
+              width: toCqi(EXIT_BTN.width),
+              height: toCqi(EXIT_BTN.height),
+            }}
+            onClick={onExit}
+          />
+        </div>
+      </main>
+    )
   }
 
   if (showConclusion && result && assets.today3) {
@@ -122,6 +161,22 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
               height: toCqi(RIBBON_AREA.height),
             }}
           />
+
+          {assets.solution && (
+            <button
+              type="button"
+              className="climate-solution-btn"
+              style={{
+                left: toCqi(SOLUTION_BTN.left),
+                top: toCqi(SOLUTION_BTN.top),
+                width: toCqi(SOLUTION_BTN.width),
+                height: toCqi(SOLUTION_BTN.height),
+              }}
+              onClick={() => setShowSolution(true)}
+            >
+              대처방법 알아보기
+            </button>
+          )}
         </div>
       </main>
     )

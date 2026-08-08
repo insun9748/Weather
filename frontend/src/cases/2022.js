@@ -22,6 +22,7 @@ import today3Title1 from '../assets/2022/title_low.png'
 import today3Title2 from '../assets/2022/title_high.png'
 import today3High from '../assets/2022/title2_high.png'
 import today3Low from '../assets/2022/title2_low.png'
+import solutionBg from '../assets/2022_solution.png'
 
 import oceanDialogueBg from '../assets/2022/ocean/ocean.png'
 import oceanQuiz1Bg from '../assets/2022/ocean/quiz1.png'
@@ -159,6 +160,7 @@ const case2022 = {
     today3High, // 비슷할 때 결론 리본
     today3Low, // 안 비슷할 때 결론 리본
     metricValueOffsetY: 57.6, // "높음"/"발생하지 않음" 텍스트를 3cqi(1920 기준) 위로
+    solution: solutionBg,
   },
 
   board: {

@@ -81,6 +81,18 @@ import today3Title1 from '../assets/2020/common/today3_title1.png'
 import today3Title2 from '../assets/2020/common/today3_title2.png'
 import today3High from '../assets/2020/common/today3_high.png'
 import today3Low from '../assets/2020/common/today3_low.png'
+import solutionBg from '../assets/2020_solution.png'
+
+// 사이트 소개(대화) 배경엔 이미 회색 바+건물이름이 그려져 있으므로 bare 모드로
+// 코드가 그리는 기본 바/화자이름을 끄고, 대사 텍스트만 그 바 위에 얹는다.
+const SITE_INTRO_BAR_BOX = {
+  left: '3.91%', top: '67.69%', width: '92.14%', height: '29.91%', right: 'auto', bottom: 'auto',
+  justifyContent: 'flex-start', paddingTop: '2.83%', paddingLeft: '17.81%',
+}
+const SATELLITE_BAR_BOX = {
+  left: '3.91%', top: '66.30%', width: '92.14%', height: '31.30%', right: 'auto', bottom: 'auto',
+  justifyContent: 'flex-start', paddingTop: '2.43%', paddingLeft: '18.93%',
+}
 
 const case2020 = {
   key: '2020',
@@ -145,6 +157,8 @@ const case2020 = {
       dialogue: {
         background: oceanStationBg,
         speaker: '해양관측소',
+        bare: true,
+        barBox: SITE_INTRO_BAR_BOX,
         lines: [
           '안녕하세요 {nickname} 조수님.',
           '해양관측소는 바닷물의 흐름과 수온, 염분 등 우리바다에 대한 기초적인',
@@ -180,6 +194,8 @@ const case2020 = {
       dialogue: {
         background: weatherStationBg,
         speaker: '기상관측소',
+        bare: true,
+        barBox: SITE_INTRO_BAR_BOX,
         lines: [
           '안녕하세요 {nickname}조수님.',
           '저희 기상관측소는 지상 부근의 대기 상태를 관측하는 곳입니다',
@@ -219,6 +235,8 @@ const case2020 = {
       dialogue: {
         background: satelliteStationBg,
         speaker: '위성센터',
+        bare: true,
+        barBox: SATELLITE_BAR_BOX,
         lines: [
           '안녕하세요 {nickname} 조수님.',
           '저희 위성센터(국가기상위성센터)는 기상위성으로 촬영한 영상을',
@@ -292,6 +310,7 @@ const case2020 = {
     today3Title2,
     today3High,
     today3Low,
+    solution: solutionBg,
   },
 }
 

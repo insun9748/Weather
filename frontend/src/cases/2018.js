@@ -33,6 +33,7 @@ import today3Title1 from '../assets/2018/title_low.png'
 import today3Title2 from '../assets/2018/title_high.png'
 import today3High from '../assets/2018/title2_high.png'
 import today3Low from '../assets/2018/title2_low.png'
+import solutionBg from '../assets/2018_solution.png'
 
 import weatherGisangBg from '../assets/2018/satellite/gisang.png'
 import weatherQuiz1Bg from '../assets/2018/satellite/quiz1.png'
@@ -90,6 +91,13 @@ const HINT_BOX_LONG = { left: '41.40cqi', top: '46.60cqi', width: '17.20cqi', he
 const RETRY_BOX = { right: '7cqi', bottom: '6cqi' }
 const HINT_HOTSPOT_BOX = { left: '28%', top: '71%', width: '40%', height: '10%' }
 const NOTEBOOK_RETURN_BOX = { left: '84.4cqi', top: '1.91cqi', width: '11.7cqi', height: '3.71cqi' }
+
+// 사이트 소개(대화) 배경엔 이미 회색 바+건물이름이 그려져 있으므로 bare 모드로
+// 코드가 그리는 기본 바/화자이름을 끄고, 대사 텍스트만 그 바 위에 얹는다.
+const SITE_INTRO_BAR_BOX = {
+  left: '3.91%', top: '67.69%', width: '92.14%', height: '29.91%', right: 'auto', bottom: 'auto',
+  justifyContent: 'flex-start', paddingTop: '2.83%', paddingLeft: '17.81%',
+}
 
 const case2018 = {
   key: '2018',
@@ -186,6 +194,7 @@ const case2018 = {
     today3Title2, // 비슷할 때 ("사실 오늘도 비슷한 조건이야!")
     today3High, // 비슷할 때 결론 리본 ("...가능성 높음")
     today3Low, // 안 비슷할 때 결론 리본 ("...가능성 낮음")
+    solution: solutionBg,
   },
 
   sites: {
@@ -193,6 +202,8 @@ const case2018 = {
       dialogue: {
         background: weatherGisangBg,
         speaker: '기상관측소',
+        bare: true,
+        barBox: SITE_INTRO_BAR_BOX,
         lines: [
           '안녕하세요 {nickname} 조수님.',
           '저희 기상관측소는 지상 부근의 대기 상태를 관측하는 곳입니다',
@@ -230,6 +241,8 @@ const case2018 = {
       dialogue: {
         background: climateGisangBg,
         speaker: '기후분석센터',
+        bare: true,
+        barBox: { ...SITE_INTRO_BAR_BOX, paddingTop: '2%' },
         lines: [
           '안녕하세요 {nickname} 조수님.',
           '저희 기후분석센터(기상청)는 대한민국의 기상 및 기후에 대한 관측, 연구 및 예보를 실시하는 일을 합니다. 저희가 드리는 단서를 갖고 추리해보세요!',
