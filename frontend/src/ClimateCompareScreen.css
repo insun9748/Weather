@@ -59,6 +59,8 @@
   font-family: 'PyeongChang', sans-serif;
   font-size: 1.7cqi;
   line-height: 1.7;
+  white-space: pre-line;
+  text-align: left;
 }
 
 .climate-title-img {

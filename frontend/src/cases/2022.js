@@ -213,7 +213,6 @@ const case2022 = {
           '해양관측소는 바닷물의 흐름과 수온, 염분 등 우리바다에 대한 기초적인',
           '조사를 수행하는 곳입니다. 저희가 드리는 단서를 갖고 추리해보세요!',
         ],
-        voiceName: '인준',
       },
       quiz: {
         background: oceanQuiz1Bg,
@@ -246,7 +245,6 @@ const case2022 = {
           '저희 국가태풍센터는 기상청에 소속되어, 우리나라 태풍 감시을 감시하고',
           '예보하는 기관입니다. 저희가 드리는 단서를 갖고 추리해보세요!',
         ],
-        voiceName: 'Hyunsu Multilingual',
       },
       quiz: {
         background: typhoonQuiz1Bg,
@@ -279,7 +277,6 @@ const case2022 = {
           '저희 위성센터(국가기상위성센터)는 기상위성으로 촬영한 영상을',
           '분석하여 대기 상태를 관측합니다. 저희가 드리는 단서를 갖고 추리해보세요!',
         ],
-        voiceName: '선히',
       },
       quiz: {
         background: satelliteQuiz1Bg,

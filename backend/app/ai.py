@@ -128,6 +128,76 @@ def generate_board_explanation(
     return _chat(system_prompt, user_prompt, fallback)
 
 
+def _parse_concepts(text: str, fallback_title: str, fallback_body: str) -> List[Dict[str, str]]:
+    concepts = []
+    for block in text.split("==="):
+        try:
+            _, rest = block.split("제목:", 1)
+            title_part, body_part = rest.split("설명:", 1)
+            title = title_part.strip()
+            body = body_part.strip()
+            if title and body:
+                concepts.append({"concept_title": title, "concept_body": body})
+        except ValueError:
+            continue
+    return concepts or [{"concept_title": fallback_title, "concept_body": fallback_body}]
+
+
+def generate_case_wrong_concepts(case: dict, wrong_texts: List[str]) -> List[Dict[str, str]]:
+    """탐정 리포트: 학생이 이 사건에서 고른 오답 선택지들을 보고, 헷갈려한 개념을 짚어주는 설명 생성.
+    오답이 서로 다른 개념을 다루면 여러 개로 나눠서 반환한다."""
+    fallback_title = "틀린 개념 정리"
+    fallback_body = "이번 사건에서 헷갈렸던 부분을 다시 한 번 짚어보면 좋아요!"
+
+    system_prompt = (
+        "너는 초등학생을 대상으로 한 기후 탐정 게임의 AI 도우미다. "
+        "학생이 이 사건을 풀면서 골랐던 오답 선택지들을 보고, 학생이 헷갈려한 기상·기후 개념이 "
+        "무엇인지 짚어주는 리포트를 작성해라. 정답을 알려주는 게 아니라 이미 다 풀고 난 뒤의 "
+        "복습이므로 올바른 개념을 직접 설명해도 된다. "
+        "오답들이 서로 다른 개념에 관한 것이면 개념별로 나눠서 각각 작성하고, "
+        "같은 개념이면 하나로 합쳐라. "
+        "각 개념은 반드시 아래 두 줄 형식으로 작성하고, 개념이 여러 개면 그 사이를 '===' 한 줄로 구분해라 "
+        "(그 외 다른 문장은 앞뒤에 붙이지 마라):\n"
+        "제목: (헷갈린 개념을 8~15자 내외로 요약, 예: 남서풍과 수증기의 관계)\n"
+        "설명: (왜 헷갈리기 쉬운지와 올바른 개념을 3~4문장으로 다정하고 쉽게 설명하고, "
+        "마지막에 '개념A → 개념B → 개념C' 처럼 인과관계를 화살표로 요약한 문장을 덧붙여라.)"
+    )
+    user_prompt = f"""사건: {case.get('title')} ({case.get('period')})
+사건 설명: {case.get('description')}
+
+학생이 골랐던 오답 선택지들:
+{chr(10).join(f'- {t}' for t in wrong_texts)}
+"""
+    fallback = f"제목: {fallback_title}\n설명: {fallback_body}"
+    text = _chat(system_prompt, user_prompt, fallback, max_tokens=600)
+    return _parse_concepts(text, fallback_title, fallback_body)
+
+
+def generate_overall_report(case_summaries: List[Dict], retry_count_total: int) -> str:
+    """탐정 리포트 마지막 페이지: 3개 사건을 종합한 맞춤형 총평 생성."""
+    fallback = (
+        "탐정님은 모든 사건을 잘 해결했어요! 앞으로도 꾸준히 관찰하고 추리하는 습관을 길러보세요."
+    )
+    system_prompt = (
+        "너는 초등학생을 대상으로 한 기후 탐정 게임의 AI 도우미다. 학생이 3개의 사건을 모두 "
+        "해결하는 과정에서 어떤 문제를 자주 틀렸는지 종합해서, 학생에게 맞춤형 총평을 4~6문장으로 "
+        "다정하게 한국어로 작성해라. 어떤 개념을 유독 헷갈려했는지, 앞으로 어떤 부분을 더 살펴보면 "
+        "좋을지 구체적으로 짚어주고, 잘한 점에 대한 칭찬도 함께 담아라."
+    )
+    lines = []
+    for c in case_summaries:
+        if c["is_perfect"]:
+            lines.append(f"- {c['title']}: 오답 없이 한 번에 해결")
+        else:
+            lines.append(f"- {c['title']}: 골랐던 오답 - {', '.join(c['wrong_texts'])}")
+    user_prompt = f"""다시 추리한 총 횟수: {retry_count_total}회
+
+사건별 결과:
+{chr(10).join(lines)}
+"""
+    return _chat(system_prompt, user_prompt, fallback, max_tokens=500)
+
+
 # 사건별 "핵심 원인" 설명 — AI가 오늘 날씨와 비교할 때 기준으로 삼는 문구.
 _CLIMATE_CAUSE_BY_CASE = {
     "2020_jangma": "아시아 여름 몬순 (지속적인 남서풍 + 높은 습도로 수증기가 계속 공급된 것)",

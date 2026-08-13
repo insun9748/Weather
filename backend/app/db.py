@@ -123,6 +123,36 @@ def save_progress(case_id: str, user_id: str, is_solved: bool, grade: Optional[s
     conn.close()
 
 
+RETRY_ACTIONS = ("wrong_answer", "board_wrong_attempt")
+
+
+def get_retry_count(case_id: str, user_id: str) -> int:
+    """해당 사건에서 오답(사이트 퀴즈 + 수사보드)으로 기록된 로그 개수 = 다시 추리한 횟수."""
+    conn = get_connection()
+    cur = conn.cursor()
+    placeholders = ",".join("?" for _ in RETRY_ACTIONS)
+    cur.execute(
+        f"SELECT COUNT(*) as cnt FROM logs WHERE case_id = ? AND user_id = ? AND action IN ({placeholders})",
+        (case_id, user_id, *RETRY_ACTIONS),
+    )
+    count = cur.fetchone()["cnt"]
+    conn.close()
+    return count
+
+
+def get_wrong_answer_texts(case_id: str, user_id: str) -> List[str]:
+    """AI 리포트 생성용 — 해당 사건에서 학생이 고른 오답 선택지의 실제 문구 목록."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT evidence_id FROM logs WHERE case_id = ? AND user_id = ? AND action = 'wrong_answer' ORDER BY id ASC",
+        (case_id, user_id),
+    )
+    rows = [r["evidence_id"] for r in cur.fetchall()]
+    conn.close()
+    return rows
+
+
 def get_progress(user_id: str) -> List[Dict]:
     """해당 유저의 사건별 진행 상태 전체를 반환한다."""
     conn = get_connection()

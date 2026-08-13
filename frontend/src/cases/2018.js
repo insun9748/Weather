@@ -209,7 +209,6 @@ const case2018 = {
           '저희 기상관측소는 지상 부근의 대기 상태를 관측하는 곳입니다',
           '저희가 드리는 단서를 갖고 추리해보세요!',
         ],
-        voiceName: 'Hyunsu Multilingual',
       },
       quiz: {
         background: weatherQuiz1Bg,
@@ -247,7 +246,6 @@ const case2018 = {
           '안녕하세요 {nickname} 조수님.',
           '저희 기후분석센터(기상청)는 대한민국의 기상 및 기후에 대한 관측, 연구 및 예보를 실시하는 일을 합니다. 저희가 드리는 단서를 갖고 추리해보세요!',
         ],
-        voiceName: '선히',
       },
       quiz: {
         background: climateQuiz1Bg,

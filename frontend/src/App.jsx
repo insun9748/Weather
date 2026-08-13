@@ -11,8 +11,23 @@ import QuizScreen from './QuizScreen'
 import HintCardScreen from './HintCardScreen'
 import BoardScreen from './BoardScreen'
 import ClimateCompareScreen from './ClimateCompareScreen'
+import ReportScreen from './ReportScreen'
 import greetingBg from './assets/page1.png'
 import assignmentBg from './assets/page2.png'
+import weatherVoice from './assets/sounds/기상관측소.mp3'
+import oceanVoice from './assets/sounds/해양관측소.mp3'
+import satelliteVoice from './assets/sounds/위성센터.mp3'
+import climateVoice from './assets/sounds/기후분석센터.mp3'
+import typhoonVoice from './assets/sounds/국가태풍센터.mp3'
+
+// 사이트별 소개 대사 TTS를 사전 녹음된 음성 파일로 대체.
+const SITE_VOICE = {
+  weather: weatherVoice,
+  ocean: oceanVoice,
+  satellite: satelliteVoice,
+  climate: climateVoice,
+  typhoon: typhoonVoice,
+}
 
 // 사건 콘텐츠 안의 '{nickname}' 자리를 실제 닉네임으로 치환.
 const withNickname = (lines, nickname) => lines.map((line) => line.replaceAll('{nickname}', nickname))
@@ -26,6 +41,7 @@ function App() {
   )
   const [user, setUser] = useState(null)
   const [completedSites, setCompletedSites] = useState([])
+  const [detectiveReport, setDetectiveReport] = useState(null)
   const nickname = user?.nickname ?? ''
 
   const c = getCase(caseKey)
@@ -65,7 +81,7 @@ function App() {
           lines={withNickname(site.dialogue.lines, nickname)}
           buttonLabel="추리하러 가기"
           onButtonClick={() => setScreen(`${prefix}Quiz`)}
-          voiceName={site.dialogue.voiceName}
+          voiceSrc={SITE_VOICE[siteKey]}
           panel={!site.dialogue.bare}
           bare={site.dialogue.bare}
           barBox={site.dialogue.barBox}
@@ -79,7 +95,7 @@ function App() {
         label: opt.label,
         ...opt.box,
         onClick: () => {
-          logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', `${siteKey}_q1_${opt.outcome}`)
+          logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', opt.label)
           setScreen(opt.outcome === 'correct' ? `${prefix}Correct` : `${prefix}${cap(opt.outcome)}`)
         },
       }))
@@ -123,7 +139,7 @@ function App() {
             label: opt.label,
             ...opt.box,
             onClick: () => {
-              logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', `${siteKey}_q2_${opt.outcome}`)
+              logEvent(opt.outcome === 'correct' ? 'correct_answer' : 'wrong_answer', opt.label)
               setScreen(opt.outcome === 'correct' ? `${prefix}Correct2` : `${prefix}${cap(opt.outcome)}`)
             },
           }))}
@@ -234,12 +250,28 @@ function App() {
   if (screen === 'caseSelect') {
     return (
       <CaseSelectScreen
+        userId={user?.user_id}
         onSelectCase={(caseId) => {
           const target = getCase(caseId)
           if (!target?.ready) return // 아직 준비 안 된 사건
           setCaseKey(caseId)
           setScreen(target.caseFile ? 'caseFile' : 'notebook')
         }}
+        onOpenReport={(report) => {
+          setDetectiveReport(report)
+          setScreen('report')
+        }}
+      />
+    )
+  }
+
+  if (screen === 'report') {
+    return (
+      <ReportScreen
+        data={detectiveReport}
+        userId={user?.user_id}
+        nickname={nickname}
+        onExit={() => setScreen('caseSelect')}
       />
     )
   }

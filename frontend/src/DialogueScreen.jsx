@@ -4,7 +4,7 @@ import './DialogueScreen.css'
 
 const TYPE_SPEED_MS = 35
 
-function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, bare, barBox, buttonBox, voiceName }) {
+function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, bare, barBox, buttonBox, voiceSrc }) {
   const fullText = lines.join('\n')
   const [visibleCount, setVisibleCount] = useState(0)
 
@@ -13,43 +13,12 @@ function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick
   }, [fullText])
 
   useEffect(() => {
-    if (!voiceName || !('speechSynthesis' in window)) return
-
-    let cancelled = false
-    let spoken = false
-    const speak = () => {
-      if (cancelled || spoken) return
-      spoken = true
-      if (speechSynthesis.onvoiceschanged === speak) speechSynthesis.onvoiceschanged = null
-      const voice = speechSynthesis.getVoices().find((v) => v.name.includes(voiceName))
-      const utter = new SpeechSynthesisUtterance(lines.join(' '))
-      utter.lang = 'ko-KR'
-      utter.rate = 1.3
-      if (voice) utter.voice = voice
-      speechSynthesis.speak(utter)
-    }
-
-    // deferred so React 18 StrictMode's dev-only mount->cleanup->mount cycle
-    // doesn't fire this twice — the first (throwaway) mount's cleanup cancels
-    // the timer before it ever calls speak()
-    const timer = setTimeout(() => {
-      if (speechSynthesis.getVoices().length === 0) {
-        // 'voiceschanged' can fire more than once as voices load in — the
-        // spoken guard above keeps this from replaying on later firings
-        speechSynthesis.onvoiceschanged = speak
-      } else {
-        speak()
-      }
-    }, 0)
-
-    return () => {
-      cancelled = true
-      clearTimeout(timer)
-      if (speechSynthesis.onvoiceschanged === speak) speechSynthesis.onvoiceschanged = null
-      speechSynthesis.cancel()
-    }
+    if (!voiceSrc) return
+    const audio = new Audio(voiceSrc)
+    audio.play().catch(() => {})
+    return () => audio.pause()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [voiceSrc])
 
   useEffect(() => {
     if (visibleCount >= fullText.length) return

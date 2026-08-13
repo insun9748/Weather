@@ -1,3 +1,96 @@
+/* file_bg.png 우측 상단에 이미 그려진 돋보기+안내문구 영역을 덮는 투명 핫스팟 */
+.report-hotspot {
+  position: absolute;
+  left: 90cqi;
+  top: 1cqi;
+  width: 10cqi;
+  height: 8cqi;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  transform: scale(1);
+  transform-origin: 90% 30%;
+  transition: transform 0.25s ease;
+}
+
+.report-hotspot:hover,
+.report-hotspot:focus-visible {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2cqi;
+}
+
+.report-loading-badge {
+  position: absolute;
+  left: 60cqi;
+  top: 7cqi;
+  padding: 0.8cqi 1.6cqi;
+  background: rgba(20, 16, 12, 0.85);
+  color: #ffcf6b;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.3cqi;
+  border-radius: 1cqi;
+  z-index: 3;
+}
+
+.report-popup-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 8, 6, 0.65);
+  z-index: 10;
+}
+
+.report-popup {
+  width: 46cqi;
+  padding: 3cqi 3.5cqi;
+  background: linear-gradient(180deg, #3c2a18, #241b12);
+  border: 0.25cqi solid #8a6335;
+  border-radius: 1.4cqi;
+  box-shadow: 0 1cqi 2.5cqi rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.report-popup-title {
+  margin: 0 0 1.6cqi;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.9cqi;
+  color: #ffcf6b;
+}
+
+.report-popup-list {
+  margin: 0 0 2.2cqi;
+  padding: 0;
+  list-style: none;
+  color: #f3e6d2;
+  font-size: 1.4cqi;
+  line-height: 2;
+}
+
+.report-popup-close {
+  min-width: 10cqi;
+  padding: 0.9cqi 2cqi;
+  font-family: 'PyeongChang', sans-serif;
+  font-weight: 700;
+  font-size: 1.4cqi;
+  color: #ffffff;
+  background: #c06d00;
+  border: none;
+  border-bottom: 0.3cqi solid #72450a;
+  border-radius: 1cqi;
+  cursor: pointer;
+}
+
+.report-popup-close:hover {
+  filter: brightness(1.08);
+}
+
 .case-files {
   position: absolute;
   inset: 0;

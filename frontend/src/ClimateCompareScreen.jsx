@@ -201,7 +201,9 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
                 {result.humidity ?? '-'}% · 풍향 {result.wind_direction ?? '-'} · 강수량{' '}
                 {result.precipitation ?? 0}mm
               </p>
-              <p className="climate-comparison-text">{result.comparison_text}</p>
+              <p className="climate-comparison-text">
+                {result.comparison_text.replace(/([.?!])\s+/g, '$1\n')}
+              </p>
             </div>
           </div>
 

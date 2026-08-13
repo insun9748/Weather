@@ -1,4 +1,5 @@
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Dict, List
 
@@ -22,6 +23,7 @@ from app.models import (
     NicknameIn,
     UserOut,
     ProgressOut,
+    DetectiveReportOut,
 )
 from app import db, ai, weather
 
@@ -80,6 +82,80 @@ def get_user_progress(user_id: str):
         )
         for r in rows
     ]
+
+
+# 탐정 리포트 페이지 순서(기획 디자인에 맞춰 2020 -> 2018 -> 2022 순).
+DETECTIVE_REPORT_CASES = [
+    ("2020_jangma", 2020),
+    ("2018_heatwave", 2018),
+    ("2022_flood", 2022),
+]
+
+
+@app.get("/users/{user_id}/detective-report", response_model=DetectiveReportOut)
+def get_detective_report(user_id: str):
+    """3개 사건을 모두 해결한 유저에게만 탐정 리포트(오답 개념 정리 + 총평)를 생성해서 돌려준다.
+    아직 다 풀지 못했으면 남은 사건 목록만 돌려준다 (AI 호출 없음)."""
+    progress_by_case = {r["case_id"]: r for r in db.get_progress(user_id)}
+
+    remaining = []
+    for case_id, year in DETECTIVE_REPORT_CASES:
+        row = progress_by_case.get(case_id)
+        if not row or not row["is_solved"]:
+            case = _cases.get(case_id, {})
+            remaining.append({
+                "case_id": case_id,
+                "year": year,
+                "title": case.get("title", case_id),
+            })
+
+    if remaining:
+        return DetectiveReportOut(all_solved=False, remaining_cases=remaining)
+
+    retry_count_total = sum(db.get_retry_count(case_id, user_id) for case_id, _ in DETECTIVE_REPORT_CASES)
+
+    per_case = []
+    for case_id, year in DETECTIVE_REPORT_CASES:
+        case = _cases.get(case_id, {})
+        wrong_texts = db.get_wrong_answer_texts(case_id, user_id)
+        per_case.append({
+            "case_id": case_id,
+            "year": year,
+            "case": case,
+            "wrong_texts": wrong_texts,
+            "is_perfect": len(wrong_texts) == 0,
+        })
+
+    # 사건별 오답 개념 3건 + 총평 1건, AI 호출을 동시에 돌려서 응답 시간을 줄인다
+    # (순차 호출하면 4번의 OpenAI 왕복 시간이 그대로 더해져 로딩이 길어짐).
+    summaries_for_overall = [
+        {"title": c["case"].get("title", c["case_id"]), "wrong_texts": c["wrong_texts"], "is_perfect": c["is_perfect"]}
+        for c in per_case
+    ]
+    with ThreadPoolExecutor(max_workers=len(per_case) + 1) as executor:
+        concept_futures = {
+            c["case_id"]: executor.submit(ai.generate_case_wrong_concepts, c["case"], c["wrong_texts"])
+            for c in per_case if not c["is_perfect"]
+        }
+        overall_future = executor.submit(ai.generate_overall_report, summaries_for_overall, retry_count_total)
+
+        cases_out = [
+            {
+                "case_id": c["case_id"],
+                "year": c["year"],
+                "is_perfect": c["is_perfect"],
+                "concepts": concept_futures[c["case_id"]].result() if c["case_id"] in concept_futures else [],
+            }
+            for c in per_case
+        ]
+        overall_summary = overall_future.result()
+
+    return DetectiveReportOut(
+        all_solved=True,
+        retry_count_total=retry_count_total,
+        cases=cases_out,
+        overall_summary=overall_summary,
+    )
 
 
 @app.get("/cases", response_model=List[CaseSummary])

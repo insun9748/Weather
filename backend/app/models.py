@@ -81,6 +81,32 @@ class CheckResult(BaseModel):
     wrong_boxes: List[str] = []  # 수사보드에서 잘못 놓인 칸 id들 (정답 자체는 알려주지 않음)
 
 
+class RemainingCaseOut(BaseModel):
+    case_id: str
+    year: int
+    title: str
+
+
+class ConceptOut(BaseModel):
+    concept_title: str
+    concept_body: str
+
+
+class CaseReportOut(BaseModel):
+    case_id: str
+    year: int
+    is_perfect: bool
+    concepts: List[ConceptOut] = []
+
+
+class DetectiveReportOut(BaseModel):
+    all_solved: bool
+    remaining_cases: List[RemainingCaseOut] = []
+    retry_count_total: Optional[int] = None
+    cases: List[CaseReportOut] = []
+    overall_summary: Optional[str] = None
+
+
 class ClimateCompareIn(BaseModel):
     """프론트는 브라우저 위치(navigator.geolocation)로 얻은 위경도만 보낸다.
     관측소 찾기 + 기상청 API 호출은 서버에서 처리 (인증키를 프론트에 노출하지 않기 위함)."""

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import hintbookIcon from './assets/2020/common/hintbook.png'
+import boardVoice from './assets/sounds/수사보드.mp3'
 import BoardHintBookScreen from './BoardHintBookScreen'
 import { checkBoard } from './api'
 import './Stage.css'
@@ -41,6 +42,13 @@ function BoardScreen({ caseId, userId, nickname, assets, onSolved, onExit, onCom
   const [submitting, setSubmitting] = useState(false)
   const [showHintbook, setShowHintbook] = useState(false)
   const [selectedEvidence, setSelectedEvidence] = useState(null)
+
+  // 수사보드 화면에 들어오면 한 번 재생.
+  useEffect(() => {
+    const audio = new Audio(boardVoice)
+    audio.play().catch(() => {})
+    return () => audio.pause()
+  }, [])
 
   const placedIds = Object.values(placement).filter(Boolean)
   const trayEvidence = EVIDENCE.filter((e) => !placedIds.includes(e.id))

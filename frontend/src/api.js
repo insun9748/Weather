@@ -34,6 +34,12 @@ export async function fetchCompletedSites(caseId, userId) {
   }
 }
 
+export async function fetchDetectiveReport(userId) {
+  const res = await fetch(`${API_BASE}/users/${encodeURIComponent(userId)}/detective-report`)
+  if (!res.ok) throw new Error('탐정 리포트를 불러오지 못했습니다')
+  return res.json()
+}
+
 export async function fetchCase(caseId) {
   const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}`)
   if (!res.ok) throw new Error('사건 정보를 불러오지 못했습니다')
