@@ -19,6 +19,8 @@ import oceanVoice from './assets/sounds/해양관측소.mp3'
 import satelliteVoice from './assets/sounds/위성센터.mp3'
 import climateVoice from './assets/sounds/기후분석센터.mp3'
 import typhoonVoice from './assets/sounds/국가태풍센터.mp3'
+import oceanAmbient from './assets/sounds/바다.wav'
+import windAmbient from './assets/sounds/바람소리.wav'
 
 // 사이트별 소개 대사 TTS를 사전 녹음된 음성 파일로 대체.
 const SITE_VOICE = {
@@ -27,6 +29,15 @@ const SITE_VOICE = {
   satellite: satelliteVoice,
   climate: climateVoice,
   typhoon: typhoonVoice,
+}
+
+// 사이트 소개 화면에 작게 까는 배경음: 해양관측소는 바다 소리, 나머지는 바람 소리.
+const SITE_AMBIENT = {
+  weather: windAmbient,
+  ocean: oceanAmbient,
+  satellite: windAmbient,
+  climate: windAmbient,
+  typhoon: windAmbient,
 }
 
 // 사건 콘텐츠 안의 '{nickname}' 자리를 실제 닉네임으로 치환.
@@ -82,6 +93,7 @@ function App() {
           buttonLabel="추리하러 가기"
           onButtonClick={() => setScreen(`${prefix}Quiz`)}
           voiceSrc={SITE_VOICE[siteKey]}
+          ambientSrc={SITE_AMBIENT[siteKey]}
           panel={!site.dialogue.bare}
           bare={site.dialogue.bare}
           barBox={site.dialogue.barBox}

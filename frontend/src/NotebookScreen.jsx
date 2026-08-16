@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import lensIcon from './assets/readingglasses.png'
+import pageTurnSfx from './assets/sounds/책 넘기는 소리.wav'
 import './Stage.css'
 import './NotebookScreen.css'
 
@@ -21,6 +22,9 @@ function NotebookScreen({ pages, tabs = [], finishBox, onFinish }) {
 
   const goTo = (index) => {
     if (index < 0 || index >= pages.length) return
+    const sfx = new Audio(pageTurnSfx)
+    sfx.volume = 0.4
+    sfx.play().catch(() => {})
     setPageIndex(index)
   }
 

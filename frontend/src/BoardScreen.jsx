@@ -46,6 +46,7 @@ function BoardScreen({ caseId, userId, nickname, assets, onSolved, onExit, onCom
   // 수사보드 화면에 들어오면 한 번 재생.
   useEffect(() => {
     const audio = new Audio(boardVoice)
+    audio.volume = 0.4
     audio.play().catch(() => {})
     return () => audio.pause()
   }, [])

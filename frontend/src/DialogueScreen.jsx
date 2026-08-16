@@ -4,7 +4,7 @@ import './DialogueScreen.css'
 
 const TYPE_SPEED_MS = 35
 
-function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, bare, barBox, buttonBox, voiceSrc }) {
+function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick, panel, bare, barBox, buttonBox, voiceSrc, ambientSrc }) {
   const fullText = lines.join('\n')
   const [visibleCount, setVisibleCount] = useState(0)
 
@@ -19,6 +19,17 @@ function DialogueScreen({ background, speaker, lines, buttonLabel, onButtonClick
     return () => audio.pause()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voiceSrc])
+
+  // 사이트 소개 화면에서 작게 깔리는 배경음(바다/바람 소리 등).
+  useEffect(() => {
+    if (!ambientSrc) return
+    const audio = new Audio(ambientSrc)
+    audio.loop = true
+    audio.volume = 0.2
+    audio.play().catch(() => {})
+    return () => audio.pause()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ambientSrc])
 
   useEffect(() => {
     if (visibleCount >= fullText.length) return
