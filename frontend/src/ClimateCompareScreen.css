@@ -19,6 +19,27 @@
   cursor: default;
 }
 
+.climate-visible-exit-btn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.68cqi solid #df7f00;
+  border-radius: 0.93cqi;
+  color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 580;
+  font-size: 1.46cqi;
+  cursor: pointer;
+}
+
+.climate-visible-exit-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-0.1cqi);
+}
+
 .climate-result-area {
   position: absolute;
   overflow-y: auto;

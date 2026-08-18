@@ -44,7 +44,7 @@ const PAGES = [
 const RETRY_COUNT_BOX = { left: toCqi(1042), top: toCqi(186), width: toCqi(140), height: toCqi(37) }
 // 개념 타이틀/본문을 각각 절대좌표로 따로 박아두면 제목이 길어져 줄바꿈될 때 본문과 겹치므로,
 // 하나의 컨테이너 안에서 자연스러운 문서 흐름(margin)으로 쌓는다.
-const CONCEPT_LIST_BOX = { left: toCqi(961), top: toCqi(427), width: toCqi(868), maxHeight: toCqi(560) }
+const CONCEPT_LIST_BOX = { left: toCqi(961), top: toCqi(427), width: toCqi(780), maxHeight: toCqi(560) }
 const OVERALL_BODY_BOX = { left: toCqi(895), top: toCqi(460), width: toCqi(935) }
 const PREV_ARROW_BOX = { left: toCqi(795), top: toCqi(619), width: toCqi(82), height: toCqi(99) }
 const NEXT_ARROW_BOX = { left: toCqi(1782), top: toCqi(619), width: toCqi(82), height: toCqi(99) }

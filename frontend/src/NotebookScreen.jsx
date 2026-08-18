@@ -13,7 +13,7 @@ const GLASS_CIRCLE_RATIO = 0.636
 const GLASS_CENTER_RATIO = 0.318
 const GLASS_INNER_RATIO = 0.5
 
-function NotebookScreen({ pages, tabs = [], finishBox, onFinish }) {
+function NotebookScreen({ pages, tabs = [], finishBox, finishButton, onFinish }) {
   const [pageIndex, setPageIndex] = useState(0)
   const [lens, setLens] = useState(null)
 
@@ -133,6 +133,16 @@ function NotebookScreen({ pages, tabs = [], finishBox, onFinish }) {
             aria-label="조사 시작하기"
             onClick={() => onFinish?.()}
           />
+        )}
+        {finishButton && (
+          <button
+            type="button"
+            className="nb-finish-button"
+            style={finishButton}
+            onClick={() => onFinish?.()}
+          >
+            조사 시작하기
+          </button>
         )}
 
         {glassStyle && (

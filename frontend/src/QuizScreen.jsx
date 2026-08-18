@@ -1,10 +1,22 @@
+import { useState } from 'react'
 import './Stage.css'
 import './QuizScreen.css'
 
-function QuizScreen({ background, options, videos = [] }) {
+function QuizScreen({ background, options, videos = [], tipImage }) {
+  const [showTip, setShowTip] = useState(false)
   return (
     <main className="stage-wrap">
       <div className="stage" style={{ backgroundImage: `url(${background})` }}>
+        {tipImage && (
+          <button type="button" className="quiz-tip-button" onClick={() => setShowTip(true)}>
+            탐정 TIP
+          </button>
+        )}
+        {showTip && (
+          <div className="quiz-tip-backdrop" onClick={() => setShowTip(false)}>
+            <img className="quiz-tip-image" src={tipImage} alt="탐정 TIP" />
+          </div>
+        )}
         {videos.map((video) => (
           <video
             key={video.src}

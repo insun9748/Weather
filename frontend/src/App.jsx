@@ -122,7 +122,7 @@ function App() {
           },
         })
       }
-      return <QuizScreen background={site.quiz.background} options={options} />
+      return <QuizScreen background={site.quiz.background} options={options} tipImage={site.quiz.tipImage} />
     }
 
     if (currentScreen === `${prefix}Zoom`) {
@@ -196,6 +196,8 @@ function App() {
       const wrong = site[key]
       if (wrong?.background && wrong?.retryTarget) {
         const retryScreen = `${prefix}${cap(wrong.retryTarget)}`
+        // 오답 화면이 quiz1로 돌아가는 경우, 그 문제의 탐정 TIP도 계속 누를 수 있게 한다.
+        const tipImage = wrong.retryTarget === 'quiz' ? site.quiz?.tipImage : undefined
         // 이미지에 "다시 풀기" 버튼이 이미 그려져 있는 경우엔 투명 히트존(retryHotspot)을,
         // 아니라면 코드가 그리는 불투명 버튼(retryBox)을 쓴다.
         if (wrong.retryHotspot) {
@@ -203,6 +205,7 @@ function App() {
             <PhotoScreen
               background={wrong.background}
               hotspot={{ label: '다시 풀기', ...wrong.retryHotspot, onClick: () => setScreen(retryScreen) }}
+              tipImage={tipImage}
             />
           )
         }
@@ -213,6 +216,7 @@ function App() {
             onButtonClick={() => setScreen(retryScreen)}
             buttonStyle={wrong.retryBox}
             solidButton
+            tipImage={tipImage}
           />
         )
       }
@@ -305,6 +309,7 @@ function App() {
         pages={c.notebook.pages}
         tabs={c.notebook.tabs}
         finishBox={c.notebook.finishBox}
+        finishButton={c.notebook.finishButton}
         onFinish={() => setScreen(c.startInvestigation ? 'startInvestigation' : c.briefing ? 'briefing' : 'map')}
       />
     )

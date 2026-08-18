@@ -50,6 +50,28 @@
   height: 13.9%;
 }
 
+/* 2020/2018 노트북 페이지에는 "조사 시작하기" 버튼이 그림에 그려져 있지 않아서
+   (2022는 이미지 안에 그려져 있음) 코드로 실제 버튼을 그려준다. */
+.nb-finish-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.68cqi solid #df7f00;
+  border-radius: 0.93cqi;
+  color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 580;
+  font-size: 1.3cqi;
+  cursor: pointer;
+}
+
+.nb-finish-button:hover {
+  filter: brightness(1.05);
+}
+
 .magnifier-lens {
   position: absolute;
   border-radius: 50%;

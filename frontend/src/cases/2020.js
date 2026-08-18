@@ -32,6 +32,7 @@ import oceanNotebookBg from '../assets/2020/ocean/b1_p10.png'
 
 import weatherStationBg from '../assets/2020/weather/p1.png'
 import weatherQuizBg from '../assets/2020/weather/p2.png'
+import weatherQuiz1Tip from '../assets/2020/weather/quiz1_tip.png'
 import weatherWrong1Bg from '../assets/2020/weather/p3.png'
 import weatherWrong2Bg from '../assets/2020/weather/p4.png'
 import weatherQuiz2Bg from '../assets/2020/weather/p5.png'
@@ -47,6 +48,7 @@ import weatherNotebookBg from '../assets/2020/weather/p10.png'
 
 import satelliteStationBg from '../assets/2020/satellite/p1.png'
 import satelliteQuizBg from '../assets/2020/satellite/p2.png'
+import satelliteQuiz1Tip from '../assets/2020/satellite/quiz1_tip.png'
 import satelliteZoomBg from '../assets/2020/satellite/p3.png'
 import satelliteWrong1Bg from '../assets/2020/satellite/p4.png'
 import satelliteCorrectBg from '../assets/2020/satellite/p5.png'
@@ -109,6 +111,8 @@ const case2020 = {
       { label: '기상 관측소', pageIndex: 2 },
       { label: '위성 센터', pageIndex: 3 },
     ],
+    // 이 케이스의 노트북 페이지 그림에는 버튼이 안 그려져 있어서 코드로 직접 그려준다.
+    finishButton: { left: '88.54cqi', top: '1.35cqi', width: '9.5cqi', height: '3.8cqi' },
   },
 
   map: {
@@ -182,9 +186,9 @@ const case2020 = {
         ],
       },
       correct2: { background: oceanCorrect2Bg, hintBox: { left: '41.35cqi', top: '37.76cqi', width: '17.29cqi', height: '4.64cqi' } },
-      wrong: { background: oceanWrongBg, retryTarget: 'quiz', retryBox: { right: '8cqi', bottom: '9cqi' } },
-      wrong2a: { background: oceanWrong2aBg, retryTarget: 'quiz2', retryBox: { right: '8cqi', bottom: '9cqi' } },
-      wrong2b: { background: oceanWrong2bBg, retryTarget: 'quiz2', retryBox: { right: '8cqi', bottom: '9cqi' } },
+      wrong: { background: oceanWrongBg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong2a: { background: oceanWrong2aBg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong2b: { background: oceanWrong2bBg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       hint: { background: oceanHintBg, frontImage: oceanHintFront, backImage: oceanHintBack, hotspotBox: { left: '30.72%', top: '72.79%', width: '33.77%', height: '8.89%' } },
       notebook: { background: oceanNotebookBg, returnBox: { left: '82.33cqi', top: '1.03cqi', width: '14.71cqi', height: '6.58cqi' } },
     },
@@ -203,14 +207,15 @@ const case2020 = {
       },
       quiz: {
         background: weatherQuizBg,
+        tipImage: weatherQuiz1Tip,
         options: [
           { label: '북쪽 계열의 바람이 주로 불어 차갑고 건조한 공기가 유입되었다.', outcome: 'wrong1', box: { left: '50.16cqi', top: '21.35cqi', width: '42.40cqi', height: '7.03cqi' } },
           { label: '남쪽 계열의 바람이 주로 불어 남쪽 바다의 따뜻하고 습한 공기가 한반도로 유입되었다.', outcome: 'correct', box: { left: '50.16cqi', top: '28.96cqi', width: '42.40cqi', height: '7.03cqi' } },
           { label: '동쪽 계열의 바람이 주로 불어 장마전선이 약해졌다.', outcome: 'wrong2', box: { left: '50.16cqi', top: '36.56cqi', width: '42.40cqi', height: '7.03cqi' } },
         ],
       },
-      wrong1: { background: weatherWrong1Bg, retryTarget: 'quiz', retryBox: { right: '8cqi', bottom: '5cqi' } },
-      wrong2: { background: weatherWrong2Bg, retryTarget: 'quiz', retryBox: { right: '6cqi', bottom: '5cqi' } },
+      wrong1: { background: weatherWrong1Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong2: { background: weatherWrong2Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       correct: { background: weatherCorrectBg, nextBox: { left: '41.35cqi', top: '38.65cqi', width: '17.29cqi', height: '4.64cqi' } },
       quiz2: {
         background: weatherQuiz2Bg,
@@ -224,7 +229,7 @@ const case2020 = {
         ],
       },
       correct2: { background: weatherCorrect2Bg, hintBox: { left: '41.35cqi', top: '38.65cqi', width: '17.29cqi', height: '4.58cqi' } },
-      wrong3: { background: weatherWrong3Bg, retryTarget: 'quiz2', retryBox: { right: '8cqi', bottom: '8cqi' } },
+      wrong3: { background: weatherWrong3Bg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       hint: { background: weatherHintBg, frontImage: weatherHintFront, backImage: weatherHintBack, hotspotBox: { left: '30.62%', top: '75%', width: '33.77%', height: '8.89%' } },
       notebook: { background: weatherNotebookBg, returnBox: { left: '83.95cqi', top: '2.02cqi', width: '14.71cqi', height: '5.65cqi' } },
     },
@@ -244,6 +249,7 @@ const case2020 = {
       },
       quiz: {
         background: satelliteQuizBg,
+        tipImage: satelliteQuiz1Tip,
         zoomLabel: '자료 확대해서 보기',
         zoomBox: { left: '38.54cqi', top: '41.67cqi', width: '5.73cqi', height: '5.73cqi' },
         options: [
@@ -253,8 +259,8 @@ const case2020 = {
         ],
       },
       zoom: { background: satelliteZoomBg, backBox: { left: '79.01cqi', top: '2.34cqi', width: '17.29cqi', height: '3.75cqi' } },
-      wrong1: { background: satelliteWrong1Bg, retryTarget: 'quiz', retryHotspot: { left: '78.44cqi', top: '44.79cqi', width: '13.70cqi', height: '3.75cqi' } },
-      wrong2: { background: satelliteWrong2Bg, retryTarget: 'quiz', retryBox: { right: '7cqi', bottom: '7cqi' } },
+      wrong1: { background: satelliteWrong1Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong2: { background: satelliteWrong2Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       correct: { background: satelliteCorrectBg, hintBox: { left: '41.35cqi', top: '38.49cqi', width: '17.29cqi', height: '3.75cqi' } },
       hint: { background: satelliteHintBg, frontImage: satelliteHintFront, backImage: satelliteHintBack, hotspotBox: { left: '33.16%', top: '72.39%', width: '33.83%', height: '7.29%' } },
       notebook: { background: satelliteNotebookBg, returnBox: { left: '83.54cqi', top: '2.71cqi', width: '13.33cqi', height: '4.58cqi' } },

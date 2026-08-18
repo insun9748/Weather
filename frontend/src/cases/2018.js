@@ -37,6 +37,7 @@ import solutionBg from '../assets/2018_solution.png'
 
 import weatherGisangBg from '../assets/2018/satellite/gisang.png'
 import weatherQuiz1Bg from '../assets/2018/satellite/quiz1.png'
+import weatherQuiz1Tip from '../assets/2018/satellite/quiz1_tip.png'
 import weatherQuiz1CorrectBg from '../assets/2018/satellite/quiz1_1.png'
 import weatherQuiz1Wrong1Bg from '../assets/2018/satellite/quiz1_2.png'
 import weatherQuiz1Wrong2Bg from '../assets/2018/satellite/quiz1_3.png'
@@ -51,6 +52,7 @@ import weatherNotebookBg from '../assets/2018/satellite/hintbook.png'
 
 import climateGisangBg from '../assets/2018/wearher/gisang.png'
 import climateQuiz1Bg from '../assets/2018/wearher/quiz1.png'
+import climateQuiz1Tip from '../assets/2018/wearher/quiz1_tip.png'
 import climateQuiz1Wrong1Bg from '../assets/2018/wearher/quiz1_1.png'
 import climateQuiz1Wrong2Bg from '../assets/2018/wearher/quiz1_2.png'
 import climateQuiz1CorrectBg from '../assets/2018/wearher/quiz1_3.png'
@@ -88,7 +90,7 @@ const NEXT_BOX = { left: '41.40cqi', top: '38.53cqi', width: '17.20cqi', height:
 // quiz2 정답 화면은 해설 길이에 따라 "획득한 단서 보기" 버튼 위치가 더 아래로 내려가기도 한다.
 const HINT_BOX_SHORT = NEXT_BOX
 const HINT_BOX_LONG = { left: '41.40cqi', top: '46.60cqi', width: '17.20cqi', height: '3.60cqi' }
-const RETRY_BOX = { right: '7cqi', bottom: '6cqi' }
+const RETRY_BOX = { right: '5.5cqi', bottom: '5cqi' }
 const HINT_HOTSPOT_BOX = { left: '28%', top: '71%', width: '40%', height: '10%' }
 const NOTEBOOK_RETURN_BOX = { left: '84.4cqi', top: '1.91cqi', width: '11.7cqi', height: '3.71cqi' }
 
@@ -110,6 +112,8 @@ const case2018 = {
       { label: '기상 관측소', pageIndex: 1 },
       { label: '기후분석센터', pageIndex: 2 },
     ],
+    // 이 케이스의 노트북 페이지 그림에는 버튼이 안 그려져 있어서 코드로 직접 그려준다.
+    finishButton: { left: '88.54cqi', top: '1.35cqi', width: '9.5cqi', height: '3.8cqi' },
   },
 
   map: {
@@ -212,6 +216,7 @@ const case2018 = {
       },
       quiz: {
         background: weatherQuiz1Bg,
+        tipImage: weatherQuiz1Tip,
         options: [
           { label: '하루 동안 햇빛이 지표를 비추는 시간이 평년보다 길어졌다.', outcome: 'correct', box: QUIZ1_OPTION_BOXES[0] },
           { label: '하루 동안 햇빛이 지표를 비추는 시간이 평년과 비슷하였다.', outcome: 'wrong1', box: QUIZ1_OPTION_BOXES[1] },
@@ -249,6 +254,7 @@ const case2018 = {
       },
       quiz: {
         background: climateQuiz1Bg,
+        tipImage: climateQuiz1Tip,
         options: [
           { label: '구름량이 증가한다.', outcome: 'wrong1', box: CLIMATE_QUIZ1_OPTION_BOXES[0] },
           { label: '구름량에 큰 변화가 없다.', outcome: 'wrong2', box: CLIMATE_QUIZ1_OPTION_BOXES[1] },

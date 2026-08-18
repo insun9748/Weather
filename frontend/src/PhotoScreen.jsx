@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Stage.css'
 import './DialogueScreen.css'
 import './PhotoScreen.css'
@@ -10,11 +11,23 @@ function PhotoScreen({
   hotspot,
   buttonStyle,
   solidButton = false,
+  tipImage,
 }) {
+  const [showTip, setShowTip] = useState(false)
   const stageClass = compactBox ? 'stage photo-stage' : 'stage'
   return (
     <main className="stage-wrap">
       <div className={stageClass} style={{ backgroundImage: `url(${background})` }}>
+        {tipImage && (
+          <button type="button" className="quiz-tip-button" onClick={() => setShowTip(true)}>
+            탐정 TIP
+          </button>
+        )}
+        {showTip && (
+          <div className="quiz-tip-backdrop" onClick={() => setShowTip(false)}>
+            <img className="quiz-tip-image" src={tipImage} alt="탐정 TIP" />
+          </div>
+        )}
         {buttonLabel && (
           <button
             className={solidButton ? 'photo-button-solid' : 'next-hint'}

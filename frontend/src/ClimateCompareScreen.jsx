@@ -7,6 +7,8 @@ const STAGE_W = 1920
 const toCqi = (px) => `${((px / STAGE_W) * 100).toFixed(2)}cqi`
 
 const EXIT_BTN = { left: 1648, top: 44, width: 227, height: 73 }
+// today2.png(날씨 비교 결과 화면)에는 버튼이 안 그려져 있어서 코드로 직접 그리는 전용 버튼 좌표.
+const VISIBLE_EXIT_BTN = { left: 1710, top: 26, width: 190, height: 80 }
 const RUN_BTN = { left: 673, top: 661, width: 596, height: 82 }
 const STATUS_AREA = { left: 480, top: 400, width: 960, height: 300 }
 
@@ -186,6 +188,21 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
     return (
       <main className="stage-wrap">
         <div className="stage climate-stage" style={{ backgroundImage: `url(${assets.today2})` }}>
+          {/* today2.png에는 수사 끝내기 버튼이 그려져 있지 않아서 코드로 직접 그려준다. */}
+          <button
+            type="button"
+            className="climate-visible-exit-btn"
+            style={{
+              left: toCqi(VISIBLE_EXIT_BTN.left),
+              top: toCqi(VISIBLE_EXIT_BTN.top),
+              width: toCqi(VISIBLE_EXIT_BTN.width),
+              height: toCqi(VISIBLE_EXIT_BTN.height),
+            }}
+            onClick={onExit}
+          >
+            수사 끝내기
+          </button>
+
           <div
             className="climate-result-area"
             style={{

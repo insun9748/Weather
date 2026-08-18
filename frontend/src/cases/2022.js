@@ -36,6 +36,7 @@ import oceanNotebookBg from '../assets/2022/ocean/hintbook.png'
 
 import typhoonDialogueBg from '../assets/2022/typhoon/typoon.png'
 import typhoonQuiz1Bg from '../assets/2022/typhoon/quiz1.png'
+import typhoonQuiz1Tip from '../assets/2022/typhoon/quiz1_tip.png'
 import typhoonQuiz1CorrectBg from '../assets/2022/typhoon/quiz1_1.png'
 import typhoonQuiz1Wrong1Bg from '../assets/2022/typhoon/quiz1_2.png'
 import typhoonQuiz1Wrong2Bg from '../assets/2022/typhoon/quiz1_3.png'
@@ -46,6 +47,7 @@ import typhoonNotebookBg from '../assets/2022/typhoon/hintbook.png'
 
 import satelliteDialogueBg from '../assets/2022/satellite/satellite.png'
 import satelliteQuiz1Bg from '../assets/2022/satellite/quiz1.png'
+import satelliteQuiz1Tip from '../assets/2022/satellite/quiz1_tip.png'
 import satelliteQuiz1Wrong1Bg from '../assets/2022/satellite/quiz1_1.png'
 import satelliteQuiz1Wrong2Bg from '../assets/2022/satellite/quiz1_2.png'
 import satelliteQuiz1CorrectBg from '../assets/2022/satellite/quiz1_3.png'
@@ -93,7 +95,7 @@ const SATELLITE_BAR_BOX = {
   left: '3.91%', top: '66.30%', width: '92.14%', height: '31.30%', right: 'auto', bottom: 'auto',
   justifyContent: 'flex-start', paddingTop: '2.43%', paddingLeft: '18.93%',
 }
-const RETRY_BOX = { right: '7cqi', bottom: '6cqi' }
+const RETRY_BOX = { right: '5.5cqi', bottom: '5cqi' }
 const NOTEBOOK_RETURN_BOX = { left: '85.10cqi', top: '2.03cqi', width: '12.76cqi', height: '3.85cqi' }
 
 const case2022 = {
@@ -248,6 +250,7 @@ const case2022 = {
       },
       quiz: {
         background: typhoonQuiz1Bg,
+        tipImage: typhoonQuiz1Tip,
         options: [
           { label: '힌남노는 여러 날 동안 강한 세력을 유지하였다.', outcome: 'correct', box: { left: '41.82cqi', top: '21.82cqi', width: '42.40cqi', height: '6.98cqi' } },
           { label: '힌남노는 시간이 지날수록 빠르게 약해졌다.', outcome: 'wrong1', box: { left: '41.82cqi', top: '29.43cqi', width: '42.40cqi', height: '6.98cqi' } },
@@ -280,6 +283,7 @@ const case2022 = {
       },
       quiz: {
         background: satelliteQuiz1Bg,
+        tipImage: satelliteQuiz1Tip,
         options: [
           { label: '힌남노 주변의 대류가 약해져 구름이 점차 사라지고 있다', outcome: 'wrong1', box: { left: '50.57cqi', top: '21.35cqi', width: '42.14cqi', height: '6.46cqi' } },
           { label: '힌남노는 육지에서 열과 수증기를 공급받고 있다', outcome: 'wrong2', box: { left: '50.57cqi', top: '28.02cqi', width: '42.14cqi', height: '6.46cqi' } },

@@ -16,3 +16,43 @@
   object-fit: cover;
   pointer-events: none;
 }
+
+.quiz-tip-button {
+  position: absolute;
+  left: 91.35cqi;
+  top: 1.35cqi;
+  width: 8cqi;
+  height: 3.6cqi;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.68cqi solid #df7f00;
+  border-radius: 0.93cqi;
+  color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 580;
+  font-size: 1.46cqi;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.quiz-tip-button:hover {
+  filter: brightness(1.05);
+}
+
+.quiz-tip-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 6;
+}
+
+.quiz-tip-image {
+  max-width: 70%;
+  max-height: 70%;
+}
