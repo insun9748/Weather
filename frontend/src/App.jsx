@@ -92,8 +92,8 @@ function App() {
           lines={withNickname(site.dialogue.lines, nickname)}
           buttonLabel="추리하러 가기"
           onButtonClick={() => setScreen(`${prefix}Quiz`)}
-          voiceSrc={SITE_VOICE[siteKey]}
-          ambientSrc={SITE_AMBIENT[siteKey]}
+          voiceSrc={site.dialogue.voiceSrc || SITE_VOICE[siteKey]}
+          ambientSrc={site.dialogue.ambientSrc || SITE_AMBIENT[siteKey]}
           panel={!site.dialogue.bare}
           bare={site.dialogue.bare}
           barBox={site.dialogue.barBox}

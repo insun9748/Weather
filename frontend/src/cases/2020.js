@@ -19,8 +19,10 @@ import notebookSatellitePage from '../assets/2020/common/page8.png'
 
 import oceanStationBg from '../assets/2020/ocean/b1_p1.png'
 import oceanQuizBg from '../assets/2020/ocean/b1_p2.png'
-import oceanCorrectBg from '../assets/2020/ocean/b1_p3.png'
-import oceanWrongBg from '../assets/2020/ocean/b1_p4.png'
+import oceanQuiz1Tip from '../assets/2020/ocean/quiz1_tip.png'
+import oceanQuiz1Wrong1Bg from '../assets/2020/ocean/b1_p3.png'
+import oceanQuiz1CorrectBg from '../assets/2020/ocean/b1_p4.png'
+import oceanQuiz1Wrong2Bg from '../assets/2020/ocean/b1_p4_2.png'
 import oceanQuiz2Bg from '../assets/2020/ocean/b1_p5.png'
 import oceanCorrect2Bg from '../assets/2020/ocean/b1_p6.png'
 import oceanWrong2aBg from '../assets/2020/ocean/b1_p7.png'
@@ -29,6 +31,9 @@ import oceanHintBg from '../assets/2020/ocean/b1_p9.png'
 import oceanHintFront from '../assets/2020/ocean/b1_p9_hint1.png'
 import oceanHintBack from '../assets/2020/ocean/b1_p9_hint2.png'
 import oceanNotebookBg from '../assets/2020/ocean/b1_p10.png'
+// 이 사이트는 원래 해양관측소였다가 기후분석센터로 콘텐츠가 바뀜 — 목소리도 기후분석센터 것으로 교체.
+import oceanSiteVoice from '../assets/sounds/기후분석센터.mp3'
+import oceanSiteAmbient from '../assets/sounds/바람소리.wav'
 
 import weatherStationBg from '../assets/2020/weather/p1.png'
 import weatherQuizBg from '../assets/2020/weather/p2.png'
@@ -160,37 +165,43 @@ const case2020 = {
     ocean: {
       dialogue: {
         background: oceanStationBg,
-        speaker: '해양관측소',
+        speaker: '기후분석센터',
         bare: true,
         barBox: SITE_INTRO_BAR_BOX,
+        voiceSrc: oceanSiteVoice,
+        ambientSrc: oceanSiteAmbient,
         lines: [
-          '안녕하세요 {nickname} 조수님.',
-          '해양관측소는 바닷물의 흐름과 수온, 염분 등 우리바다에 대한 기초적인',
-          '조사를 수행하는 곳입니다. 저희가 드리는 단서를 갖고 추리해보세요!',
+          '안녕하세요 {nickname} 조수님',
+          '저희 기후분석센터(기상청)는 대한민국의 기상 및 기후에 대한 관측, 연구',
+          '및 예보를 실시하는 일을 합니다',
+          '저희가 드리는 단서를 갖고 추리해보세요!',
         ],
       },
       quiz: {
         background: oceanQuizBg,
+        tipImage: oceanQuiz1Tip,
         options: [
-          { label: '2020년 해수면 온도가 평년보다 높았다.', outcome: 'correct', box: { left: '44.84cqi', top: '22.03cqi', width: '43.44cqi', height: '6.46cqi' } },
-          { label: '2020년 해수면 온도가 평년보다 낮았다.', outcome: 'wrong', box: { left: '44.84cqi', top: '30.05cqi', width: '43.44cqi', height: '6.46cqi' } },
+          { label: '북태평양고기압이 우리나라 북쪽으로 빠르게 확장했다.', outcome: 'wrong1', box: { left: '45.73cqi', top: '20.99cqi', width: '51.82cqi', height: '7.29cqi' } },
+          { label: '북태평양고기압이 북쪽으로 확장하지 못하고 일본 남쪽에 머물렀다.', outcome: 'correct', box: { left: '45.73cqi', top: '29.43cqi', width: '51.82cqi', height: '7.29cqi' } },
+          { label: '북태평양고기압이 우리나라 주변에서 완전히 사라졌다.', outcome: 'wrong2', box: { left: '45.73cqi', top: '37.86cqi', width: '51.82cqi', height: '7.29cqi' } },
         ],
       },
-      correct: { background: oceanCorrectBg, nextBox: { left: '41.41cqi', top: '38.13cqi', width: '17.19cqi', height: '4.06cqi' } },
+      correct: { background: oceanQuiz1CorrectBg, nextBox: { left: '41.41cqi', top: '38.13cqi', width: '17.19cqi', height: '4.06cqi' } },
       quiz2: {
         background: oceanQuiz2Bg,
         options: [
-          { label: '증발이 활발해주고 남서풍을 타고 많은 수증기가 한반도로 이동한다.', outcome: 'correct', box: { left: '22.86cqi', top: '20.16cqi', width: '54.27cqi', height: '5.94cqi' } },
-          { label: '바닷물이 차가워져 수증기가 감소한다.', outcome: 'wrong2a', box: { left: '22.86cqi', top: '28.18cqi', width: '54.27cqi', height: '5.94cqi' } },
-          { label: '수증기가 바로 비가 되어 바다에서 모두 내린다.', outcome: 'wrong2b', box: { left: '22.86cqi', top: '36.20cqi', width: '54.27cqi', height: '5.94cqi' } },
+          { label: '장마전선이 빠르게 북쪽으로 이동했다.', outcome: 'wrong2a', box: { left: '22.86cqi', top: '20.16cqi', width: '54.27cqi', height: '5.94cqi' } },
+          { label: '장마전선이 한반도 주변에 오래 머물렀다.', outcome: 'correct', box: { left: '22.86cqi', top: '28.18cqi', width: '54.27cqi', height: '5.94cqi' } },
+          { label: '장마전선이 빠르게 소멸했다.', outcome: 'wrong2b', box: { left: '22.86cqi', top: '36.20cqi', width: '54.27cqi', height: '5.94cqi' } },
         ],
       },
       correct2: { background: oceanCorrect2Bg, hintBox: { left: '41.35cqi', top: '37.76cqi', width: '17.29cqi', height: '4.64cqi' } },
-      wrong: { background: oceanWrongBg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong1: { background: oceanQuiz1Wrong1Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
+      wrong2: { background: oceanQuiz1Wrong2Bg, retryTarget: 'quiz', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       wrong2a: { background: oceanWrong2aBg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
       wrong2b: { background: oceanWrong2bBg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
-      hint: { background: oceanHintBg, frontImage: oceanHintFront, backImage: oceanHintBack, hotspotBox: { left: '30.72%', top: '72.79%', width: '33.77%', height: '8.89%' } },
-      notebook: { background: oceanNotebookBg, returnBox: { left: '82.33cqi', top: '1.03cqi', width: '14.71cqi', height: '6.58cqi' } },
+      hint: { background: oceanHintBg, frontImage: oceanHintFront, backImage: oceanHintBack, hotspotBox: { left: '32%', top: '78%', width: '38%', height: '10%' } },
+      notebook: { background: oceanNotebookBg, returnBox: { left: '86cqi', top: '0.8cqi', width: '15cqi', height: '5cqi' } },
     },
 
     weather: {

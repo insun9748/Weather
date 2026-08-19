@@ -81,11 +81,11 @@ def generate_wrong_answer_explanation(
 
 BOARD_CHIP_TEXT = {
     "evi1": "비구름대 반복 형성",
-    "evi2": "수증기 증가",
+    "evi2": "북태평양고기압 북쪽 확장 지연",
     "evi3": "한반도로의 수증기 유입 증가",
 }
 BOARD_CARD_TEXT = {
-    "box1": "해수면 온도 상승",
+    "box1": "찬 공기 정체",
     "box2": "지속적인 남서풍",
     "box3": "장기간 장마",
 }
