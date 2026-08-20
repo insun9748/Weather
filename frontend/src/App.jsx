@@ -310,6 +310,7 @@ function App() {
         tabs={c.notebook.tabs}
         finishBox={c.notebook.finishBox}
         finishButton={c.notebook.finishButton}
+        pageOverlays={c.notebook.pageOverlays}
         onFinish={() => setScreen(c.startInvestigation ? 'startInvestigation' : c.briefing ? 'briefing' : 'map')}
       />
     )

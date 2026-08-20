@@ -5,6 +5,7 @@
 import emptyhintbook1 from '../assets/2018/emptyhintbook1.png'
 import emptyhintbook2 from '../assets/2018/emptyhintbook2.png'
 import emptyhintbook3 from '../assets/2018/emptyhintbook3.png'
+import notebookFillText from '../assets/2018/text.png'
 
 import mapBg from '../assets/2018/map.png'
 import weatherBuilding from '../assets/2018/build1.png'
@@ -114,6 +115,12 @@ const case2018 = {
     ],
     // 이 케이스의 노트북 페이지 그림에는 버튼이 안 그려져 있어서 코드로 직접 그려준다.
     finishButton: { left: '88.54cqi', top: '1.35cqi', width: '9.5cqi', height: '3.8cqi' },
+    // 기상관측소 페이지(인덱스 1) 오른쪽에 "조사를 통해 자료를 채워주세요" 문구가 안 그려져 있어서 직접 얹는다.
+    pageOverlays: {
+      1: [
+        { src: notebookFillText, style: { left: '64.45cqi', top: '23.09cqi', width: '12.5cqi', height: '2.42cqi' } },
+      ],
+    },
   },
 
   map: {

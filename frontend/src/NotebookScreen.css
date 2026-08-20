@@ -72,6 +72,11 @@
   filter: brightness(1.05);
 }
 
+.nb-page-overlay {
+  position: absolute;
+  pointer-events: none;
+}
+
 .magnifier-lens {
   position: absolute;
   border-radius: 50%;

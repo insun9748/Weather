@@ -13,7 +13,7 @@ const GLASS_CIRCLE_RATIO = 0.636
 const GLASS_CENTER_RATIO = 0.318
 const GLASS_INNER_RATIO = 0.5
 
-function NotebookScreen({ pages, tabs = [], finishBox, finishButton, onFinish }) {
+function NotebookScreen({ pages, tabs = [], finishBox, finishButton, pageOverlays, onFinish }) {
   const [pageIndex, setPageIndex] = useState(0)
   const [lens, setLens] = useState(null)
 
@@ -103,6 +103,9 @@ function NotebookScreen({ pages, tabs = [], finishBox, finishButton, onFinish })
         onTouchMove={handleTouchMove}
         onTouchEnd={() => setLens(null)}
       >
+        {pageOverlays?.[pageIndex]?.map((overlay, i) => (
+          <img key={i} className="nb-page-overlay" src={overlay.src} alt="" style={overlay.style} />
+        ))}
         <button
           type="button"
           className="nb-hit nb-arrow-left"
