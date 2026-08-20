@@ -37,13 +37,18 @@ function BoardHintBookScreen({ pages: PAGES, tabs = [], onReturn }) {
           />
         ))}
 
-        {pageIndex === PAGES.length - 1 && (
+        {pageIndex === PAGES.length - 1 ? (
           <button
             type="button"
             className="bhb-hit bhb-return"
             aria-label="수사보드로 돌아가기"
             onClick={onReturn}
           />
+        ) : (
+          // 마지막 페이지는 그림에 버튼이 이미 그려져 있지만, 나머지 페이지엔 없어서 직접 그려준다.
+          <button type="button" className="bhb-return-visible" onClick={onReturn}>
+            수사보드로 돌아가기
+          </button>
         )}
       </div>
     </main>

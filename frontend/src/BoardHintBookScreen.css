@@ -56,3 +56,27 @@
   width: 17.7%;
   height: 7.9%;
 }
+
+.bhb-return-visible {
+  position: absolute;
+  left: 82cqi;
+  top: 1.35cqi;
+  width: 16cqi;
+  height: 4.6cqi;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9b19;
+  border: none;
+  border-bottom: 0.68cqi solid #df7f00;
+  border-radius: 0.93cqi;
+  color: #ffffff;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 580;
+  font-size: 1.6cqi;
+  cursor: pointer;
+}
+
+.bhb-return-visible:hover {
+  filter: brightness(1.05);
+}
