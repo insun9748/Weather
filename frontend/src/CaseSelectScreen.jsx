@@ -7,7 +7,7 @@ import finishBackground from './assets/finish_bg.png'
 import star2 from './assets/star2.png'
 import star3 from './assets/star3.png'
 import star4 from './assets/star4.png'
-import { fetchDetectiveReport } from './api'
+import { fetchDetectiveReport, fetchUserProgress } from './api'
 import './Stage.css'
 import './CaseSelectScreen.css'
 
@@ -17,6 +17,10 @@ const CASES = [
   { id: '2022', image: file2022, alt: '2022 수도권 집중호우 사건', starImage: star4 },
 ]
 
+// /detective-report는 3사건이 다 풀렸을 때 AI로 총평까지 생성해서 몇 초씩 걸리므로,
+// 화면 진입 시 배경만 바꾸는 용도로는 DB 조회만 하는 /progress로 빠르게 확인한다.
+const REQUIRED_CASE_IDS = ['2020_jangma', '2018_heatwave', '2022_flood']
+
 function CaseSelectScreen({ onSelectCase, userId, onAllSolved }) {
   const [loading, setLoading] = useState(false)
   const [remainingCases, setRemainingCases] = useState(null)
@@ -25,8 +29,11 @@ function CaseSelectScreen({ onSelectCase, userId, onAllSolved }) {
   // 3사건을 모두 해결했으면 말풍선 문구가 바뀐 배경으로 보여준다 (자동 화면 전환은 없음 - 돋보기를 눌러야 finish로 간다).
   useEffect(() => {
     if (!userId) return
-    fetchDetectiveReport(userId)
-      .then((report) => setAllSolved(report.all_solved))
+    fetchUserProgress(userId)
+      .then((rows) => {
+        const solvedIds = new Set(rows.filter((r) => r.is_solved).map((r) => r.case_id))
+        setAllSolved(REQUIRED_CASE_IDS.every((id) => solvedIds.has(id)))
+      })
       .catch(() => {})
   }, [userId])
 

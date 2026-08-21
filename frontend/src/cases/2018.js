@@ -82,10 +82,16 @@ const CLIMATE_QUIZ1_OPTION_BOXES = [
   { ...CLIMATE_QUIZ1_BOX, top: '28.18cqi' },
   { ...CLIMATE_QUIZ1_BOX, top: '35.05cqi' },
 ]
-const QUIZ2_OPTION_BOXES = [
-  { left: '25.50cqi', top: '19.11cqi', width: '51.60cqi', height: '5.52cqi' },
-  { left: '25.50cqi', top: '25.99cqi', width: '51.60cqi', height: '5.52cqi' },
-  { left: '25.50cqi', top: '32.86cqi', width: '51.60cqi', height: '5.52cqi' },
+// 기상관측소/기후분석센터 quiz2 배경 이미지가 서로 달라서(선택지 픽셀 좌표가 다름) 따로 잡는다.
+const WEATHER_QUIZ2_OPTION_BOXES = [
+  { left: '22.86cqi', top: '19.43cqi', width: '54.27cqi', height: '7.40cqi' },
+  { left: '22.86cqi', top: '27.45cqi', width: '54.27cqi', height: '7.40cqi' },
+  { left: '22.86cqi', top: '35.47cqi', width: '54.27cqi', height: '7.40cqi' },
+]
+const CLIMATE_QUIZ2_OPTION_BOXES = [
+  { left: '25.47cqi', top: '20.16cqi', width: '51.77cqi', height: '4.38cqi' },
+  { left: '25.47cqi', top: '27.03cqi', width: '51.77cqi', height: '4.38cqi' },
+  { left: '25.47cqi', top: '33.91cqi', width: '51.77cqi', height: '4.38cqi' },
 ]
 const NEXT_BOX = { left: '41.40cqi', top: '38.53cqi', width: '17.20cqi', height: '4.16cqi' }
 // quiz2 정답 화면은 해설 길이에 따라 "획득한 단서 보기" 버튼 위치가 더 아래로 내려가기도 한다.
@@ -236,9 +242,9 @@ const case2018 = {
       quiz2: {
         background: weatherQuiz2Bg,
         options: [
-          { label: '지표가 흡수하는 태양 에너지가 감소한다.', outcome: 'wrong3a', box: QUIZ2_OPTION_BOXES[0] },
-          { label: '지표에 많은 열이 축적된다.', outcome: 'correct', box: QUIZ2_OPTION_BOXES[1] },
-          { label: '지표의 열이 빠르게 방출된다.', outcome: 'wrong3b', box: QUIZ2_OPTION_BOXES[2] },
+          { label: '지표가 흡수하는 태양 에너지가 감소한다.', outcome: 'wrong3a', box: WEATHER_QUIZ2_OPTION_BOXES[0] },
+          { label: '지표에 많은 열이 축적된다.', outcome: 'correct', box: WEATHER_QUIZ2_OPTION_BOXES[1] },
+          { label: '지표의 열이 빠르게 방출된다.', outcome: 'wrong3b', box: WEATHER_QUIZ2_OPTION_BOXES[2] },
         ],
       },
       wrong3a: { background: weatherQuiz2Wrong1Bg, retryTarget: 'quiz2', retryBox: RETRY_BOX },
@@ -274,9 +280,9 @@ const case2018 = {
       quiz2: {
         background: climateQuiz2Bg,
         options: [
-          { label: '햇빛이 지표에 도달하는 시간이 줄어든다.', outcome: 'wrong3a', box: QUIZ2_OPTION_BOXES[0] },
-          { label: '비가 내리는 날이 늘어난다.', outcome: 'wrong3b', box: QUIZ2_OPTION_BOXES[1] },
-          { label: '맑은 날이 지속된다.', outcome: 'correct', box: QUIZ2_OPTION_BOXES[2] },
+          { label: '햇빛이 지표에 도달하는 시간이 줄어든다.', outcome: 'wrong3a', box: CLIMATE_QUIZ2_OPTION_BOXES[0] },
+          { label: '비가 내리는 날이 늘어난다.', outcome: 'wrong3b', box: CLIMATE_QUIZ2_OPTION_BOXES[1] },
+          { label: '맑은 날이 지속된다.', outcome: 'correct', box: CLIMATE_QUIZ2_OPTION_BOXES[2] },
         ],
       },
       wrong3a: { background: climateQuiz2Wrong1Bg, retryTarget: 'quiz2', retryBox: RETRY_BOX },
