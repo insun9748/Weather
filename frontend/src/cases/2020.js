@@ -241,7 +241,7 @@ const case2020 = {
       },
       correct2: { background: weatherCorrect2Bg, hintBox: { left: '41.35cqi', top: '38.65cqi', width: '17.29cqi', height: '4.58cqi' } },
       wrong3: { background: weatherWrong3Bg, retryTarget: 'quiz2', retryBox: { right: '5.5cqi', bottom: '5cqi' } },
-      hint: { background: weatherHintBg, frontImage: weatherHintFront, backImage: weatherHintBack, hotspotBox: { left: '30.62%', top: '75%', width: '33.77%', height: '8.89%' } },
+      hint: { background: weatherHintBg, frontImage: weatherHintFront, backImage: weatherHintBack, hotspotBox: { left: '31.43%', top: '74.89%', width: '33.37%', height: '8.99%' } },
       notebook: { background: weatherNotebookBg, returnBox: { left: '83.95cqi', top: '2.02cqi', width: '14.71cqi', height: '5.65cqi' } },
     },
 
