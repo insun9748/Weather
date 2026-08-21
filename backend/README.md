@@ -53,5 +53,5 @@ climate-detective-backend/
 
 - AI 연동 (오답 해설 / 힌트 / 탐정 등급 리포트 / 오늘 날씨 연결) — `/check`가 반환하는
   `failed_stage`, `failed_stage_label`, `message`를 프롬프트에 그대로 넣으면 오답 해설 붙이기 쉬움
-- 로그 영속 저장 (현재는 메모리 저장이라 서버 재시작하면 날아감) — SQLite로 교체 권장
+- 로그 영속 저장 — 외부 Postgres(DATABASE_URL 환경변수)에 저장
 - 프론트엔드 연동

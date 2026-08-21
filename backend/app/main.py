@@ -41,7 +41,7 @@ DATA_DIR = Path(__file__).parent / "data"
 
 # 사건 데이터는 자주 안 바뀌므로 서버 시작 시 메모리에 로드해서 계속 재사용.
 _cases: Dict[str, dict] = {}
-# 로그/진행상태는 app/db.py의 SQLite로 영속 저장 (재시작해도 안 날아감).
+# 로그/진행상태는 app/db.py를 통해 외부 Postgres(DATABASE_URL)에 영속 저장 (재시작해도 안 날아감).
 
 
 def _load_cases():
@@ -192,7 +192,7 @@ def get_case(case_id: str):
 
 @app.post("/cases/{case_id}/logs")
 def save_logs(case_id: str, submission: LogSubmission):
-    """사용자의 클릭/연결 행동 로그 저장 (탐정 등급 리포트용 원본 데이터). SQLite에 영속 저장됨."""
+    """사용자의 클릭/연결 행동 로그 저장 (탐정 등급 리포트용 원본 데이터). Postgres에 영속 저장됨."""
     if case_id not in _cases:
         raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
 

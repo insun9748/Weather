@@ -1,15 +1,15 @@
-import sqlite3
-from pathlib import Path
+import os
 from typing import List, Dict, Optional
 from datetime import datetime, timezone
 
-DB_PATH = Path(__file__).parent / "data" / "app.db"
+import psycopg2
+import psycopg2.extras
+
+DATABASE_URL = os.environ["DATABASE_URL"]
 
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
 
 
 def init_db():
@@ -27,7 +27,7 @@ def init_db():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             case_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
             action TEXT NOT NULL,
@@ -60,7 +60,7 @@ def create_or_get_user(nickname: str) -> str:
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "INSERT OR IGNORE INTO users (user_id, nickname, created_at) VALUES (?, ?, ?)",
+        "INSERT INTO users (user_id, nickname, created_at) VALUES (%s, %s, %s) ON CONFLICT (user_id) DO NOTHING",
         (user_id, nickname, datetime.now(timezone.utc).isoformat()),
     )
     conn.commit()
@@ -74,13 +74,13 @@ def save_logs(case_id: str, user_id: str, logs: List[Dict]) -> int:
     cur = conn.cursor()
     for log in logs:
         cur.execute(
-            "INSERT INTO logs (case_id, user_id, action, evidence_id, timestamp) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO logs (case_id, user_id, action, evidence_id, timestamp) VALUES (%s, %s, %s, %s, %s)",
             (case_id, user_id, log["action"], log["evidence_id"], log.get("timestamp")),
         )
     conn.commit()
 
     cur.execute(
-        "SELECT COUNT(*) as cnt FROM logs WHERE case_id = ? AND user_id = ?",
+        "SELECT COUNT(*) as cnt FROM logs WHERE case_id = %s AND user_id = %s",
         (case_id, user_id),
     )
     total = cur.fetchone()["cnt"]
@@ -93,7 +93,7 @@ def get_logs(case_id: str, user_id: str) -> List[Dict]:
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "SELECT action, evidence_id, timestamp FROM logs WHERE case_id = ? AND user_id = ? ORDER BY id ASC",
+        "SELECT action, evidence_id, timestamp FROM logs WHERE case_id = %s AND user_id = %s ORDER BY id ASC",
         (case_id, user_id),
     )
     rows = [dict(r) for r in cur.fetchall()]
@@ -111,8 +111,8 @@ def save_progress(case_id: str, user_id: str, is_solved: bool, grade: Optional[s
     cur.execute(
         """
         INSERT INTO progress (case_id, user_id, is_solved, grade, solved_at)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(case_id, user_id) DO UPDATE SET
+        VALUES (%s, %s, %s, %s, %s)
+        ON CONFLICT (case_id, user_id) DO UPDATE SET
             is_solved = excluded.is_solved,
             grade = excluded.grade,
             solved_at = excluded.solved_at
@@ -130,9 +130,9 @@ def get_retry_count(case_id: str, user_id: str) -> int:
     """해당 사건에서 오답(사이트 퀴즈 + 수사보드)으로 기록된 로그 개수 = 다시 추리한 횟수."""
     conn = get_connection()
     cur = conn.cursor()
-    placeholders = ",".join("?" for _ in RETRY_ACTIONS)
+    placeholders = ",".join("%s" for _ in RETRY_ACTIONS)
     cur.execute(
-        f"SELECT COUNT(*) as cnt FROM logs WHERE case_id = ? AND user_id = ? AND action IN ({placeholders})",
+        f"SELECT COUNT(*) as cnt FROM logs WHERE case_id = %s AND user_id = %s AND action IN ({placeholders})",
         (case_id, user_id, *RETRY_ACTIONS),
     )
     count = cur.fetchone()["cnt"]
@@ -145,7 +145,7 @@ def get_wrong_answer_texts(case_id: str, user_id: str) -> List[str]:
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "SELECT evidence_id FROM logs WHERE case_id = ? AND user_id = ? AND action = 'wrong_answer' ORDER BY id ASC",
+        "SELECT evidence_id FROM logs WHERE case_id = %s AND user_id = %s AND action = 'wrong_answer' ORDER BY id ASC",
         (case_id, user_id),
     )
     rows = [r["evidence_id"] for r in cur.fetchall()]
@@ -158,7 +158,7 @@ def get_progress(user_id: str) -> List[Dict]:
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "SELECT case_id, is_solved, grade, solved_at FROM progress WHERE user_id = ?",
+        "SELECT case_id, is_solved, grade, solved_at FROM progress WHERE user_id = %s",
         (user_id,),
     )
     rows = [dict(r) for r in cur.fetchall()]
