@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import file2020 from './assets/2020_file.png'
 import file2018 from './assets/2018_file.png'
 import file2022 from './assets/2022_file.png'
 import background from './assets/file_bg.png'
+import finishBackground from './assets/finish_bg.png'
 import star2 from './assets/star2.png'
 import star3 from './assets/star3.png'
 import star4 from './assets/star4.png'
@@ -16,9 +17,18 @@ const CASES = [
   { id: '2022', image: file2022, alt: '2022 수도권 집중호우 사건', starImage: star4 },
 ]
 
-function CaseSelectScreen({ onSelectCase, userId, onOpenReport }) {
+function CaseSelectScreen({ onSelectCase, userId, onAllSolved }) {
   const [loading, setLoading] = useState(false)
   const [remainingCases, setRemainingCases] = useState(null)
+  const [allSolved, setAllSolved] = useState(false)
+
+  // 3사건을 모두 해결했으면 말풍선 문구가 바뀐 배경으로 보여준다 (자동 화면 전환은 없음 - 돋보기를 눌러야 finish로 간다).
+  useEffect(() => {
+    if (!userId) return
+    fetchDetectiveReport(userId)
+      .then((report) => setAllSolved(report.all_solved))
+      .catch(() => {})
+  }, [userId])
 
   const handleMagnifierClick = async () => {
     if (!userId || loading) return
@@ -26,7 +36,7 @@ function CaseSelectScreen({ onSelectCase, userId, onOpenReport }) {
     try {
       const report = await fetchDetectiveReport(userId)
       if (report.all_solved) {
-        onOpenReport(report)
+        onAllSolved(report)
       } else {
         setRemainingCases(report.remaining_cases)
       }
@@ -39,7 +49,7 @@ function CaseSelectScreen({ onSelectCase, userId, onOpenReport }) {
 
   return (
     <main className="stage-wrap">
-      <div className="stage" style={{ backgroundImage: `url(${background})` }}>
+      <div className="stage" style={{ backgroundImage: `url(${allSolved ? finishBackground : background})` }}>
         <button
           type="button"
           className="report-hotspot"

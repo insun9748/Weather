@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { sendLog, fetchCompletedSites } from './api'
+import { sendLog, fetchCompletedSites, solveCase } from './api'
 import { getCase } from './cases'
 import HomeScreen from './HomeScreen'
 import DialogueScreen from './DialogueScreen'
@@ -14,6 +14,8 @@ import ClimateCompareScreen from './ClimateCompareScreen'
 import ReportScreen from './ReportScreen'
 import greetingBg from './assets/page1.png'
 import assignmentBg from './assets/page2.png'
+import finish1Bg from './assets/finish1.png'
+import finish2Bg from './assets/finish2.png'
 import weatherVoice from './assets/sounds/기상관측소.mp3'
 import oceanVoice from './assets/sounds/해양관측소.mp3'
 import satelliteVoice from './assets/sounds/위성센터.mp3'
@@ -273,9 +275,9 @@ function App() {
           setCaseKey(caseId)
           setScreen(target.caseFile ? 'caseFile' : 'notebook')
         }}
-        onOpenReport={(report) => {
+        onAllSolved={(report) => {
           setDetectiveReport(report)
-          setScreen('report')
+          setScreen('finish1')
         }}
       />
     )
@@ -369,6 +371,40 @@ function App() {
     )
   }
 
+  if (screen === 'finish1') {
+    return (
+      // finish1.png에 어두운 바 + "기상이" 이름표 + "감사합니다" 버튼이 이미 그려져 있어서
+      // bare 모드로 대사만 얹고, 버튼은 그 위에 투명한 클릭 영역만 남긴다.
+      <DialogueScreen
+        background={finish1Bg}
+        bare
+        barBox={{ padding: '0 4cqi 6cqi 19cqi' }}
+        lines={[`3가지 미제사건을 모두 해결한 전설의 탐정 ${nickname},`, '아주 좋은 수사였어!']}
+        buttonLabel="감사합니다"
+        buttonBox={{ right: '3.8%', bottom: '17%', color: 'transparent' }}
+        onButtonClick={() => setScreen('finish2')}
+      />
+    )
+  }
+
+  if (screen === 'finish2') {
+    return (
+      <DialogueScreen
+        background={finish2Bg}
+        bare
+        barBox={{ padding: '0 4cqi 3cqi 19cqi' }}
+        lines={[
+          '앞으로도 이상 기후에 관심을 가져주게나',
+          '자네를 위한 탐정 리포트도 준비해 두었으니,',
+          '한번 확인해 보게나!',
+        ]}
+        buttonLabel="탐정리포트 보기"
+        buttonBox={{ right: '6.8%', bottom: '17.2%', color: 'transparent' }}
+        onButtonClick={() => setScreen('report')}
+      />
+    )
+  }
+
   if (screen === 'board1') {
     return (
       <BoardScreen
@@ -376,7 +412,10 @@ function App() {
         userId={user?.user_id}
         nickname={nickname}
         assets={c.board}
-        onSolved={() => logEvent('case_solved', CASE_ID)}
+        onSolved={() => {
+          logEvent('case_solved', CASE_ID)
+          solveCase(CASE_ID, user?.user_id)
+        }}
         onExit={() => setScreen('map')}
         onCompareClimate={() => setScreen('climateCompare')}
       />

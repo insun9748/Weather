@@ -66,6 +66,15 @@ export async function checkBoard(caseId, userId, placement) {
   return res.json()
 }
 
+export function solveCase(caseId, userId) {
+  if (!userId) return
+  fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}/solve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId }),
+  }).catch(() => {})
+}
+
 export async function compareClimate(caseId, payload) {
   const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(caseId)}/climate-compare`, {
     method: 'POST',

@@ -119,7 +119,6 @@ function BoardScreen({ caseId, userId, nickname, assets, onSolved, onExit, onCom
       const result = await checkBoard(caseId, userId, placement)
       if (result.is_correct) {
         setPhase('reaction')
-        onSolved?.()
       } else {
         setFeedback(result.ai_explanation || result.message)
         setWrongBoxes(result.wrong_boxes || [])
@@ -199,7 +198,10 @@ function BoardScreen({ caseId, userId, nickname, assets, onSolved, onExit, onCom
             className="board-hotspot"
             aria-label={assets.finalChoice.correct.label}
             style={assets.finalChoice.correct.box}
-            onClick={() => setPhase('finalCorrect')}
+            onClick={() => {
+              setPhase('finalCorrect')
+              onSolved?.()
+            }}
           />
           <button
             type="button"

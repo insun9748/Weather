@@ -63,6 +63,10 @@ class CheckSubmission(BaseModel):
     ordered_evidence_ids: List[str]
 
 
+class SolveCaseIn(BaseModel):
+    user_id: str
+
+
 class BoardCheckIn(BaseModel):
     """수사보드(board1.png)에서 학생이 각 번호 칸에 무엇을 끌어다 놓았는지.
     빈 칸은 None."""

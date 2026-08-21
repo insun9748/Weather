@@ -93,7 +93,7 @@ import solutionBg from '../assets/2020_solution.png'
 // 사이트 소개(대화) 배경엔 이미 회색 바+건물이름이 그려져 있으므로 bare 모드로
 // 코드가 그리는 기본 바/화자이름을 끄고, 대사 텍스트만 그 바 위에 얹는다.
 const SITE_INTRO_BAR_BOX = {
-  left: '3.91%', top: '67.69%', width: '92.14%', height: '29.91%', right: 'auto', bottom: 'auto',
+  left: '3.91%', top: '66%', width: '92.14%', height: '29.91%', right: 'auto', bottom: 'auto',
   justifyContent: 'flex-start', paddingTop: '2.83%', paddingLeft: '17.81%',
 }
 const SATELLITE_BAR_BOX = {
@@ -304,7 +304,7 @@ const case2020 = {
       { id: 'box2', style: { left: '38.91cqi', top: '36.61cqi', width: '15.21cqi', height: '6.77cqi' }, widthPx: 292, heightPx: 130 },
       { id: 'box3', style: { left: '74.95cqi', top: '12.24cqi', width: '15.42cqi', height: '7.55cqi' }, widthPx: 296, heightPx: 145 },
     ],
-    confirmBtn: { left: '85.83cqi', top: '50.05cqi', width: '11.82cqi', height: '3.75cqi' },
+    confirmBtn: { left: '85.3cqi', top: '50.5cqi', width: '11.82cqi', height: '3.75cqi' },
     nextLink: { left: '85.42cqi', top: '49.74cqi', width: '9.38cqi', height: '3.65cqi' },
     reactionBox: { left: '28.18cqi', top: '44.74cqi', width: '44.17cqi', height: '7.71cqi' },
     // board4~6.png는 3840x2160(2배 해상도) 기준.

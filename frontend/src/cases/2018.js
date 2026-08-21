@@ -93,7 +93,7 @@ const HINT_BOX_SHORT = NEXT_BOX
 const HINT_BOX_LONG = { left: '41.40cqi', top: '46.60cqi', width: '17.20cqi', height: '3.60cqi' }
 const RETRY_BOX = { right: '5.5cqi', bottom: '5cqi' }
 const HINT_HOTSPOT_BOX = { left: '28%', top: '71%', width: '40%', height: '10%' }
-const NOTEBOOK_RETURN_BOX = { left: '84.4cqi', top: '1.91cqi', width: '11.7cqi', height: '3.71cqi' }
+const NOTEBOOK_RETURN_BOX = { left: '83.3cqi', top: '1.92cqi', width: '12.8cqi', height: '3.71cqi' }
 
 // 사이트 소개(대화) 배경엔 이미 회색 바+건물이름이 그려져 있으므로 bare 모드로
 // 코드가 그리는 기본 바/화자이름을 끄고, 대사 텍스트만 그 바 위에 얹는다.

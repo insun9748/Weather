@@ -18,6 +18,7 @@ from app.models import (
     CheckSubmission,
     CheckResult,
     BoardCheckIn,
+    SolveCaseIn,
     ClimateCompareIn,
     ClimateCompareOut,
     NicknameIn,
@@ -295,7 +296,8 @@ def check_board(case_id: str, submission: BoardCheckIn):
     }
 
     if placement == BOARD_ANSWER:
-        db.save_progress(case_id=case_id, user_id=submission.user_id, is_solved=True)
+        # 배치는 맞았지만, "사건 해결"로 기록하는 시점은 이후 범인까지 맞혔을 때
+        # (POST /cases/{case_id}/solve) 이므로 여기서는 progress를 건드리지 않는다.
         return CheckResult(
             is_correct=True,
             message="모든 인과관계를 올바르게 연결했습니다. 사건 해결!",
@@ -323,6 +325,17 @@ def check_board(case_id: str, submission: BoardCheckIn):
         ai_explanation=ai.generate_board_explanation(case, placement, BOARD_ANSWER),
         wrong_boxes=wrong_boxes,
     )
+
+
+@app.post("/cases/{case_id}/solve")
+def solve_case(case_id: str, submission: SolveCaseIn):
+    """수사보드에서 범인(최종 선택지)까지 맞혔을 때 이 사건을 "해결"로 기록한다.
+    탐정 리포트(/detective-report)의 all_solved 판정 기준이 여기서 저장되는 progress다."""
+    if case_id not in _cases:
+        raise HTTPException(status_code=404, detail="사건을 찾을 수 없습니다")
+
+    db.save_progress(case_id=case_id, user_id=submission.user_id, is_solved=True)
+    return {"saved": True}
 
 
 @app.post("/cases/{case_id}/climate-compare", response_model=ClimateCompareOut)
