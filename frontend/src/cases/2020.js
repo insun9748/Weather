@@ -10,7 +10,6 @@ import mapBg from '../assets/2020/common/map1.png'
 import oceanBuilding from '../assets/2020/common/building1.png'
 import satelliteBuilding from '../assets/2020/common/building2.png'
 import weatherBuilding from '../assets/2020/common/building3.png'
-import mapDetective from '../assets/2020/common/map_gisang.png'
 
 import notebookCasePage from '../assets/2020/common/page5.png'
 import notebookOceanPage from '../assets/2020/common/page6.png'
@@ -122,10 +121,6 @@ const case2020 = {
 
   map: {
     background: mapBg,
-    detective: {
-      image: mapDetective,
-      box: { left: '59.69%', top: '69.07%', width: '16.2%', height: '26.49%' },
-    },
     sites: [
       {
         id: 'ocean',

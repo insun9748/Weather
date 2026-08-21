@@ -112,11 +112,10 @@ def fetch_kma_weather(station_id: int) -> Optional[Dict]:
         wind_code = _parse_value(cols[2])
         wind_speed = _parse_value(cols[3])
         # RN(그 시각 강수량)은 계절에 따라 1~3시간 간격으로만 갱신되어 그 사이엔 결측(-9)으로
-        # 찍히는 경우가 많다. 지금 비가 오고 있어도 0mm로 보일 수 있어서, 결측이면 자정부터
-        # 누적된 RN_DAY(일 강수량)로 대체해 "오늘 비가 왔는지"를 더 안정적으로 판단한다.
-        precipitation = _parse_value(cols[15])
-        if precipitation is None:
-            precipitation = _parse_value(cols[16])
+        # 찍히는 경우가 많고, 순간값이라 "오늘 비가 왔는지" 판단하기에도 부적절하다. 자정부터
+        # 지금까지 누적된 RN_DAY(일 강수량)를 대신 쓴다 — 갱신이 훨씬 안정적이고, 하루 단위
+        # 기후 비교(오늘 vs 사건 당시)라는 용도에도 더 맞는 값이다.
+        precipitation = _parse_value(cols[16])
         return {
             "temperature": _parse_value(cols[11]),
             "humidity": _parse_value(cols[13]),

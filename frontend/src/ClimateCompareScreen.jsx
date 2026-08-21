@@ -215,7 +215,7 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
             <div className="climate-result">
               <p className="climate-location">
                 📍 {result.location_name} · 기온 {result.temperature ?? '-'}°C · 습도{' '}
-                {result.humidity ?? '-'}% · 풍향 {result.wind_direction ?? '-'} · 강수량{' '}
+                {result.humidity ?? '-'}% · 풍향 {result.wind_direction ?? '-'} · 오늘 누적 강수량{' '}
                 {result.precipitation ?? '-'}mm
               </p>
               <p className="climate-comparison-text">
