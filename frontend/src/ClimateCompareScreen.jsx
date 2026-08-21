@@ -216,7 +216,7 @@ function ClimateCompareScreen({ caseId, assets, onExit }) {
               <p className="climate-location">
                 📍 {result.location_name} · 기온 {result.temperature ?? '-'}°C · 습도{' '}
                 {result.humidity ?? '-'}% · 풍향 {result.wind_direction ?? '-'} · 강수량{' '}
-                {result.precipitation ?? 0}mm
+                {result.precipitation ?? '-'}mm
               </p>
               <p className="climate-comparison-text">
                 {result.comparison_text.replace(/([.?!])\s+/g, '$1\n')}
