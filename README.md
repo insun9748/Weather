@@ -1,6 +1,16 @@
 # 기후 탐정: 장마 사건 파일
 
 배포 URL: https://weather-ochre-kappa.vercel.app/ (로그인/결제 없이 크롬 브라우저에서 바로 이용 가능)
+<img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/74dc3a34-8b2b-484c-b5d4-ad8959539aac" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/516d12b8-ec24-4940-adfd-a3f751b4812f" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e3764207-37ba-4f5f-98d0-14b3f2b71913" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7f06099f-fa61-4bf1-b70a-425dbac0fccf" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3cec90de-03b8-417d-86a6-5bb1c346dfe2" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f0ed309e-d659-4def-917a-64016fbbe529" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a20b422b-3a67-43c3-badc-8436c53e2643" />
+<img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/aa5fe5a3-adf4-4445-a9ff-1b652c75ace6" />
+
+
 
 중학생을 대상으로 한 기후 교육용 웹 콘텐츠입니다. 학생은 "기후 탐정"이 되어 2018년 폭염, 2020년 역대 최장 장마, 2022년 수도권 집중호우, 세 가지 실제 이상기후 사건을 조사합니다. 각 사건 현장(기상관측소, 해양관측소, 위성센터, 기후분석센터, 국가태풍센터 등)을 돌며 관측 자료 퀴즈를 풀고, 증거를 인과관계 순서대로 수사보드에 배치해 사건의 원인을 추리합니다. 세 사건을 모두 해결하면 AI가 학생의 오답 이력을 바탕으로 개인화된 탐정 리포트(헷갈렸던 개념 정리 + 총평)를 생성해 주고, 브라우저 위치 기반으로 오늘의 실제 기상청 관측값을 가져와 과거 사건의 기후 패턴과 비교해 보여줍니다.
 
